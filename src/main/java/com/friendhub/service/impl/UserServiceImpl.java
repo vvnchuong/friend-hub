@@ -24,13 +24,16 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
+    private final PasswordEncoder passwordEncoder;
 
     public UserServiceImpl(UserRepository userRepository,
                            RoleRepository roleRepository,
-                           UserMapper userMapper) {
+                           UserMapper userMapper,
+                           PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -39,6 +42,8 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("User already existed.");
 
         User user = userMapper.toUser(request);
+
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         Role role = roleRepository.findById(2L)
                         .orElseThrow(() -> new RuntimeException("Role not found"));

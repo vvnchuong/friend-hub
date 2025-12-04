@@ -1,0 +1,25 @@
+package com.friendhub.dto.response;
+
+import com.friendhub.enums.ERole;
+import com.friendhub.enums.Gender;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class UserResponse {
+
+    String firstName;
+    String lastName;
+    Gender gender;
+    String email;
+    String avatarUrl;
+    String coverUrl;
+    ERole role;
+
+}

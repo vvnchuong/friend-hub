@@ -46,5 +46,12 @@ public class User {
     @JoinColumn(name = "role_id")
     Role role;
 
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    List<Post> posts = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    List<Comment> comments = new ArrayList<>();
 
 }

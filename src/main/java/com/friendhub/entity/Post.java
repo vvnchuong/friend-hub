@@ -1,5 +1,6 @@
 package com.friendhub.entity;
 
+import com.friendhub.enums.Privacy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,6 +24,9 @@ public class Post {
 
     @Column(columnDefinition = "MEDIUMTEXT")
     String content;
+
+    @Enumerated(EnumType.STRING)
+    Privacy privacy;
 
     Instant createdAt;
     Instant updatedAt;

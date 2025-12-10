@@ -24,8 +24,6 @@ public class Post {
     @Column(columnDefinition = "MEDIUMTEXT")
     String content;
 
-    String mediaUrl;
-
     Instant createdAt;
     Instant updatedAt;
 
@@ -38,5 +36,8 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post")
+    List<PostMedia> postMedia = new ArrayList<>();
 
 }

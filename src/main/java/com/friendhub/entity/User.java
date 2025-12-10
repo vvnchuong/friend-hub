@@ -54,4 +54,7 @@ public class User {
     @JsonIgnore
     List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    List<PostLike> postLikes = new ArrayList<>();
+
 }

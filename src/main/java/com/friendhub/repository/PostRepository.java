@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    boolean existsById(long postId);
+
     List<Post> findAllByOrderByCreatedAtDesc();
 
     List<Post> findByUserIdOrderByCreatedAtDesc(long userId);

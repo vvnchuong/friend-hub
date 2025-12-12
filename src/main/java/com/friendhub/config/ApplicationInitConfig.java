@@ -2,7 +2,7 @@ package com.friendhub.config;
 
 import com.friendhub.entity.Role;
 import com.friendhub.entity.User;
-import com.friendhub.enums.ERole;
+import com.friendhub.enums.UserRole;
 import com.friendhub.enums.ErrorCode;
 import com.friendhub.exception.AppException;
 import com.friendhub.repository.RoleRepository;
@@ -27,7 +27,7 @@ public class ApplicationInitConfig {
         return args -> {
             if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
 
-                Role role = roleRepository.findByName(ERole.ADMIN)
+                Role role = roleRepository.findByName(UserRole.ADMIN)
                         .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
 
                 User user = User.builder()

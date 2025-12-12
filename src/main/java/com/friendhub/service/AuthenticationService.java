@@ -5,6 +5,8 @@ import com.friendhub.dto.request.IntrospectRequest;
 import com.friendhub.dto.response.AuthenticationResponse;
 import com.friendhub.dto.response.IntrospectResponse;
 import com.friendhub.entity.User;
+import com.friendhub.enums.ErrorCode;
+import com.friendhub.exception.AppException;
 import com.friendhub.repository.InvalidatedTokenRepository;
 import com.friendhub.repository.UserRepository;
 import com.nimbusds.jose.*;
@@ -59,14 +61,14 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Email not found."));
+                .orElseThrow(() -> new AppException(ErrorCode.EMAIL_NOT_FOUND));
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
 
         if (!authenticated)
-            throw new RuntimeException("Unauthenticated");
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
 
         String token = generateToken(user);
 
@@ -108,6 +110,8 @@ public class AuthenticationService {
                 .jwtID(UUID.randomUUID().toString())
                 .claim("user_id", user.getId())
                 .claim("email", user.getEmail())
+                .claim("firstName", user.getFirstName())
+                .claim("lastName", user.getLastName())
                 .claim("scope", user.getRole().getName())
                 .build();
 

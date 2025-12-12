@@ -1,7 +1,7 @@
 package com.friendhub.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.friendhub.enums.ERole;
+import com.friendhub.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -23,7 +23,7 @@ public class Role {
     long id;
 
     @Enumerated(EnumType.STRING)
-    ERole name;
+    UserRole name;
 
     @OneToMany(mappedBy = "role")
     @JsonIgnore

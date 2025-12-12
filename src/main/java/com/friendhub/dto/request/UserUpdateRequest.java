@@ -1,6 +1,6 @@
 package com.friendhub.dto.request;
 
-import com.friendhub.enums.ERole;
+import com.friendhub.enums.UserRole;
 import com.friendhub.enums.Gender;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
@@ -29,6 +29,6 @@ public class UserUpdateRequest {
     String avatarUrl;
     String coverUrl;
 
-    ERole role;
+    UserRole role;
 
 }

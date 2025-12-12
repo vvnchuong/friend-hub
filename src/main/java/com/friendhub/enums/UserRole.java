@@ -1,6 +1,6 @@
 package com.friendhub.enums;
 
-public enum ERole {
+public enum UserRole {
 
     ADMIN,
     MEMBER

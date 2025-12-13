@@ -1,5 +1,6 @@
 package com.friendhub.mapper;
 
+import com.friendhub.dto.request.GroupPostCreationRequest;
 import com.friendhub.dto.request.PostCreationRequest;
 import com.friendhub.dto.request.PostUpdateRequest;
 import com.friendhub.dto.response.PostResponse;

@@ -16,6 +16,8 @@ public interface PostService {
 
     List<PostResponse> getPostsByAuthorId(long authorId);
 
+    List<PostResponse> getAllFriendPosts();
+
     PostResponse updatePost(long postId, PostUpdateRequest request);
 
     void deletePost(long postId);

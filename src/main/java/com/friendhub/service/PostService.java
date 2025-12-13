@@ -14,7 +14,9 @@ public interface PostService {
 
     PostResponse getPostById(long postId);
 
-    List<PostResponse> getPostsByAuthorId(long authorId);
+    List<PostResponse> getMyPosts();
+
+    List<PostResponse> getPostsOfUser(long userId);
 
     List<PostResponse> getAllFriendPosts();
 

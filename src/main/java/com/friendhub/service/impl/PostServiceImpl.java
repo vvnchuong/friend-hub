@@ -145,9 +145,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePost(long postId) {
-        boolean isExisted = postRepository.existsById(postId);
-        if (!isExisted)
-            throw new AppException(ErrorCode.POST_NOT_FOUND);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
+
+        boolean isAuthor = Objects.equals(post.getUser().getId(), CurrentUser.id());
+        boolean isAdmin = Objects.equals(CurrentUser.role(), UserRole.ADMIN.toString());
+
+        if (!isAuthor && !isAdmin)
+            throw new AppException(ErrorCode.UNAUTHORIZED);
 
         postRepository.deleteById(postId);
     }

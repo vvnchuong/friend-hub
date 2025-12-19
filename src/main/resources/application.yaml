@@ -12,9 +12,15 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 jwt:
   signerKey: "qefqi5X+n/6jIHV74cPC6QTZvKBmyddMNhw7vWO3Yu7Rk1YdN2EWNjs7zJX/ZL0i"
-  validDuration: 1800
+  validDuration: 86400
   refreshableDuration: 86400
 
+upload-file:
+  base-uri: YOUR_FILE_PATH

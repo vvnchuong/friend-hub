@@ -5,8 +5,8 @@ import com.friendhub.dto.request.UserCreationRequest;
 import com.friendhub.dto.request.UserUpdateRequest;
 import com.friendhub.dto.response.FriendResponse;
 import com.friendhub.dto.response.UserResponse;
+import com.friendhub.service.FriendService;
 import com.friendhub.service.UserService;
-import com.friendhub.service.impl.FriendServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class UserController {
 
     private final UserService userService;
 
-    private final FriendServiceImpl friendService;
+    private final FriendService friendService;
 
     @PostMapping
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {

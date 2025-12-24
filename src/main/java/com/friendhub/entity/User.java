@@ -36,9 +36,13 @@ public class User {
     @Column(nullable = false)
     String password;
 
+    @Column(columnDefinition = "MEDIUMTEXT")
+    String bio;
+
     String avatarUrl;
     String coverUrl;
-
+    String phoneNumber;
+    String address;
     Instant createdAt;
     Instant updatedAt;
 
@@ -56,5 +60,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     List<PostLike> postLikes = new ArrayList<>();
+
 
 }

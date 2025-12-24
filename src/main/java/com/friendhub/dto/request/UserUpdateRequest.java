@@ -26,9 +26,10 @@ public class UserUpdateRequest {
     @NotBlank(message = "Password is required")
     String password;
 
+    String phoneNumber;
+    String address;
+    String bio;
     String avatarUrl;
     String coverUrl;
-
-    UserRole role;
 
 }

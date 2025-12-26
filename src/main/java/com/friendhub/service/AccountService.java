@@ -1,5 +1,6 @@
 package com.friendhub.service;
 
+import com.friendhub.dto.request.ChangePasswordRequest;
 import com.friendhub.dto.request.UserCreationRequest;
 import com.friendhub.dto.request.UserUpdateRequest;
 import com.friendhub.dto.response.UserResponse;
@@ -49,12 +50,24 @@ public class AccountService {
 
     @Transactional
     public UserResponse updateMyProfile(UserUpdateRequest request) {
-        User user = userRepository.findById(CurrentUser.id())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        User user = userService.getUserById(CurrentUser.id());
 
         userMapper.updateUser(user, request);
 
         return userMapper.toUserResponse(user);
+    }
+
+    @Transactional
+    public void changePassword(ChangePasswordRequest request) {
+        User user = userService.getUserById(CurrentUser.id());
+
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword()))
+            throw new AppException(ErrorCode.INVALID_OLD_PASSWORD);
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword()))
+            throw new AppException(ErrorCode.PASSWORD_CONFIRM_MISMATCH);
+
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
     }
 
 }

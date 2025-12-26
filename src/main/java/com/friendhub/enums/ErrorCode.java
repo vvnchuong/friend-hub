@@ -24,6 +24,8 @@ public enum ErrorCode {
     USER_NOT_FOUND(2001, "User not found.", HttpStatus.NOT_FOUND),
     USER_ALREADY_EXISTED(2002, "User already existed.", HttpStatus.CONFLICT),
     ROLE_NOT_FOUND(2003, "Role not found.", HttpStatus.NOT_FOUND),
+    INVALID_OLD_PASSWORD(2004, "Invalid old password", HttpStatus.BAD_REQUEST),
+    PASSWORD_CONFIRM_MISMATCH(2005, "Password confirm mismatch", HttpStatus.BAD_REQUEST),
 
     POST_NOT_FOUND(3001, "Post not found.", HttpStatus.NOT_FOUND),
 

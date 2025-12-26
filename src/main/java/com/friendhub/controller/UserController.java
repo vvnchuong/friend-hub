@@ -1,17 +1,15 @@
 package com.friendhub.controller;
 
+import com.friendhub.dto.request.ChangePasswordRequest;
 import com.friendhub.dto.response.ApiResponse;
 import com.friendhub.dto.request.UserCreationRequest;
 import com.friendhub.dto.request.UserUpdateRequest;
-import com.friendhub.dto.response.FriendResponse;
 import com.friendhub.dto.response.UserResponse;
 import com.friendhub.service.AccountService;
-import com.friendhub.service.FriendService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,7 +17,6 @@ import java.util.List;
 public class UserController {
 
     private final AccountService accountService;
-    private final FriendService friendService;
 
     @PostMapping
     public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
@@ -42,6 +39,14 @@ public class UserController {
         return ApiResponse.<UserResponse>builder()
                 .message("User updated successfully.")
                 .result(accountService.updateMyProfile(request))
+                .build();
+    }
+
+    @PutMapping("/me/change-password")
+    public ApiResponse<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        accountService.changePassword(request);
+        return ApiResponse.<Void>builder()
+                .message("Change your password successfully.")
                 .build();
     }
 

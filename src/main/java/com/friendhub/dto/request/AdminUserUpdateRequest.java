@@ -2,7 +2,7 @@ package com.friendhub.dto.request;
 
 import com.friendhub.enums.Gender;
 import com.friendhub.enums.UserRole;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,10 +15,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AdminUserUpdateRequest {
 
-    @NotBlank(message = "First name is required")
+    @Size(min = 2, max = 50)
     String firstName;
 
-    @NotBlank(message = "Last name is required")
+    @Size(min = 2, max = 50)
     String lastName;
 
     Gender gender;

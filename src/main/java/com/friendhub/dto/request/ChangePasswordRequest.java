@@ -1,6 +1,6 @@
 package com.friendhub.dto.request;
 
-import com.friendhub.enums.Gender;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,19 +12,15 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserUpdateRequest {
+public class ChangePasswordRequest {
 
-    @Size(min = 2, max = 50)
-    String firstName;
+    @NotBlank
+    String oldPassword;
 
-    @Size(min = 2, max = 50)
-    String lastName;
+    @Size(min = 6, message = "New password must be at least 6 characters")
+    String newPassword;
 
-    Gender gender;
-    String phoneNumber;
-    String address;
-    String bio;
-    String avatarUrl;
-    String coverUrl;
+    @NotBlank
+    String confirmPassword;
 
 }

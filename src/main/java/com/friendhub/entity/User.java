@@ -61,5 +61,18 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<PostLike> postLikes = new ArrayList<>();
 
+    // group
+    @OneToMany(mappedBy = "user")
+    List<GroupJoinRequest> joinRequestsSent = new ArrayList<>();
+
+    @OneToMany(mappedBy = "handledBy")
+    List<GroupJoinRequest> joinRequestsHandled = new ArrayList<>();
+
+    // notification
+    @OneToMany(mappedBy = "sender")
+    List<Notification> notificationsSender = new ArrayList<>();
+
+    @OneToMany(mappedBy = "receiver")
+    List<Notification> notificationsReceiver = new ArrayList<>();
 
 }

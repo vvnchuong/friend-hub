@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import java.time.Instant;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -22,5 +24,9 @@ public class UserResponse {
     String avatarUrl;
     String coverUrl;
     UserRole role;
+    String phoneNumber;
+    String address;
+    String bio;
+    Instant createdAt;
 
 }

@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class FriendCancelRequest {
+public class FriendRejectRequest {
 
     @NotNull(message = "User ID is required")
     long userId;

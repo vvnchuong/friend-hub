@@ -14,7 +14,12 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "friends")
+@Table(
+        name = "friends",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {"user_low_id", "user_high_id"}
+        )
+)
 public class Friend {
 
     @Id
@@ -22,12 +27,16 @@ public class Friend {
     long id;
 
     @ManyToOne
-    @JoinColumn(name = "requester_id", referencedColumnName = "id", nullable = false)
-    User requester;
+    @JoinColumn(name = "user_low_id", nullable = false)
+    User userLow;
 
     @ManyToOne
-    @JoinColumn(name = "addressee_id", referencedColumnName = "id", nullable = false)
-    User addressee;
+    @JoinColumn(name = "user_high_id", nullable = false)
+    User userHigh;
+
+    @ManyToOne
+    @JoinColumn(name = "requester_id")
+    User requester;
 
     @Enumerated(EnumType.STRING)
     FriendStatus status;

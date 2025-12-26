@@ -4,23 +4,40 @@ import com.friendhub.entity.Friend;
 import com.friendhub.enums.FriendStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface FriendRepository extends JpaRepository<Friend, Long> {
 
-    boolean existsByRequesterIdAndAddresseeIdAndStatus(
-            long requesterId, long addresseeId, FriendStatus status);
+    boolean existsByUserLowIdAndUserHighIdAndStatus(
+            long userLowId,
+            long userHighId,
+            FriendStatus status
+    );
 
-    Optional<Friend> findByAddresseeIdAndRequesterIdAndStatus(
-            long addresseeId, long requesterId, FriendStatus status);
+    @Query("""
+    SELECT f
+    FROM Friend f
+    WHERE f.status = :status
+      AND (f.userLow.id = :userId OR f.userHigh.id = :userId)
+""")
+    List<Friend> findFriends(
+            @Param("userId") long userId,
+            @Param("status") FriendStatus status
+    );
 
-    Optional<Friend> findByRequesterIdAndAddresseeIdAndStatus(
-            long addresseeId, long requesterId, FriendStatus status);
+    @Query("""
+    SELECT f
+    FROM Friend f
+    WHERE f.status = 'PENDING'
+      AND f.requester.id <> :userId
+      AND (f.userLow.id = :userId OR f.userHigh.id = :userId)
+""")
+    List<Friend> findPendingRequests(@Param("userId") long userId);
 
-    List<Friend> findByRequesterIdAndStatus(long userId, FriendStatus status);
+    Optional<Friend> findByUserLowIdAndUserHighId(long lowId, long highId);
 
-    List<Friend> findByAddresseeIdAndStatus(long userId, FriendStatus status);
 
 }

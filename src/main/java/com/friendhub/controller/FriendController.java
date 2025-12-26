@@ -1,7 +1,7 @@
 package com.friendhub.controller;
 
 import com.friendhub.dto.request.FriendAcceptRequest;
-import com.friendhub.dto.request.FriendCancelRequest;
+import com.friendhub.dto.request.FriendRejectRequest;
 import com.friendhub.dto.request.FriendCreationRequest;
 import com.friendhub.dto.request.UnFriendRequest;
 import com.friendhub.dto.response.ApiResponse;
@@ -37,8 +37,8 @@ public class FriendController {
                 .build();
     }
 
-    @PostMapping("/cancel")
-    public ApiResponse<String> rejectFriendRequest(@RequestBody FriendCancelRequest request) {
+    @PostMapping("/reject")
+    public ApiResponse<String> rejectFriendRequest(@RequestBody FriendRejectRequest request) {
         friendService.rejectFriendRequest(request);
 
         return ApiResponse.<String>builder()

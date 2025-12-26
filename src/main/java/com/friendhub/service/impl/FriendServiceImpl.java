@@ -1,8 +1,8 @@
 package com.friendhub.service.impl;
 
 import com.friendhub.dto.request.FriendAcceptRequest;
-import com.friendhub.dto.request.FriendCancelRequest;
 import com.friendhub.dto.request.FriendCreationRequest;
+import com.friendhub.dto.request.FriendRejectRequest;
 import com.friendhub.dto.request.UnFriendRequest;
 import com.friendhub.dto.response.FriendResponse;
 import com.friendhub.entity.Friend;
@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -32,96 +31,91 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public void addFriendRequest(FriendCreationRequest request) {
-        User requester = getUserById(CurrentUser.id());
-        User addressee = getUserById(request.getUserId());
+        User me = getUser(CurrentUser.id());
+        User other = getUser(request.getUserId());
 
-        checkIfAlreadyFriends(requester, addressee);
-        checkIfRequestPendingEitherWay(requester, addressee);
+        if (me.getId() == other.getId()) {
+            throw new AppException(ErrorCode.INVALID_JOIN_REQUEST);
+        }
 
-        Friend friendRequest = Friend.builder()
-                .requester(requester)
-                .addressee(addressee)
-                .status(FriendStatus.PENDING)
-                .createdAt(Instant.now())
-                .build();
+        Friend friend = findOrCreate(me, other);
 
-        friendRepository.save(friendRequest);
-    }
+        if (friend.getStatus() == FriendStatus.ACCEPTED) {
+            throw new AppException(ErrorCode.ALREADY_FRIENDS);
+        }
+        if (friend.getStatus() == FriendStatus.PENDING) {
+            throw new AppException(ErrorCode.FRIEND_REQUEST_ALREADY);
+        }
+        if (friend.getStatus() == FriendStatus.BLOCKED) {
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
 
-    @Override
-    public void acceptFriendRequest(FriendAcceptRequest request) {
-        User requester = getUserById(request.getUserId());
-        User addressee = getUserById(CurrentUser.id());
-
-        Friend friendRequest = friendRepository.findByAddresseeIdAndRequesterIdAndStatus(
-                addressee.getId(), requester.getId(), FriendStatus.PENDING)
-                    .orElseThrow(() -> new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));
-
-        friendRequest.setStatus(FriendStatus.ACCEPTED);
-        friendRequest.setUpdatedAt(Instant.now());
-
-        friendRepository.save(friendRequest);
-    }
-
-    @Override
-    public void rejectFriendRequest(FriendCancelRequest request) {
-        User requester = getUserById(request.getUserId());
-        User addressee = getUserById(CurrentUser.id());;
-
-        Friend friendRequest = friendRepository.findByAddresseeIdAndRequesterIdAndStatus(
-                        addressee.getId(), requester.getId(), FriendStatus.PENDING)
-                .orElseThrow(() -> new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));
-
-        friendRequest.setStatus(FriendStatus.REJECTED);
-        friendRequest.setUpdatedAt(Instant.now());
-
-        friendRepository.save(friendRequest);
-    }
-
-    @Override
-    public void unFriend(UnFriendRequest request) {
-        User currentUser = getUserById(CurrentUser.id());
-        User otherUser = getUserById(request.getUserId());
-
-        Friend friend = friendRepository
-                .findByRequesterIdAndAddresseeIdAndStatus(currentUser.getId(), otherUser.getId(), FriendStatus.ACCEPTED)
-                .or(() -> friendRepository.findByRequesterIdAndAddresseeIdAndStatus(otherUser.getId(), currentUser.getId(), FriendStatus.ACCEPTED))
-                .orElseThrow(() -> new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));
-
-        friend.setStatus(FriendStatus.UNFRIENDED);
+        friend.setRequester(me);
+        friend.setStatus(FriendStatus.PENDING);
         friend.setUpdatedAt(Instant.now());
 
         friendRepository.save(friend);
     }
 
     @Override
-    public List<FriendResponse> getAllFriendsByUser() {
-        List<Friend> asRequester = friendRepository
-                .findByRequesterIdAndStatus(CurrentUser.id(), FriendStatus.ACCEPTED);
+    public void acceptFriendRequest(FriendAcceptRequest request) {
+        User me = getUser(CurrentUser.id());
+        User requester = getUser(request.getUserId());
 
-        List<Friend> asAddressee = friendRepository
-                .findByAddresseeIdAndStatus(CurrentUser.id(), FriendStatus.ACCEPTED);
+        Friend friend = getFriend(me, requester);
 
-        return Stream.concat(
-                asRequester.stream().map(Friend::getAddressee),
-                asAddressee.stream().map(Friend::getRequester)
-        )
-                .map(userMapper::toUserResponse)
-                .map(FriendResponse::new)
-                .toList();
+        if (friend.getStatus() != FriendStatus.PENDING ||
+                friend.getRequester().getId() != requester.getId()) {
+            throw new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND);
+        }
+
+        friend.setStatus(FriendStatus.ACCEPTED);
+        friend.setUpdatedAt(Instant.now());
+
+        friendRepository.save(friend);
     }
 
     @Override
-    public List<FriendResponse> getAllFriendsById(long userId) {
-        List<Friend> asRequester = friendRepository
-                .findByRequesterIdAndStatus(userId, FriendStatus.ACCEPTED);
+    public void rejectFriendRequest(FriendRejectRequest request) {
+        User me = getUser(CurrentUser.id());
+        User requester = getUser(request.getUserId());
 
-        List<Friend> asAddressee = friendRepository
-                .findByAddresseeIdAndStatus(userId, FriendStatus.ACCEPTED);
+        Friend friend = getFriend(me, requester);
 
-        return Stream.concat(
-                        asRequester.stream().map(Friend::getAddressee),
-                        asAddressee.stream().map(Friend::getRequester)
+        if (friend.getStatus() != FriendStatus.PENDING ||
+                friend.getRequester().getId() != requester.getId()) {
+            throw new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND);
+        }
+
+        friend.setStatus(FriendStatus.REJECTED);
+        friend.setUpdatedAt(Instant.now());
+
+        friendRepository.save(friend);
+    }
+
+    @Override
+    public void unFriend(UnFriendRequest request) {
+        User me = getUser(CurrentUser.id());
+        User other = getUser(request.getUserId());
+
+        Friend friend = getFriend(me, other);
+
+        if (friend.getStatus() != FriendStatus.ACCEPTED) {
+            throw new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND);
+        }
+
+        friendRepository.delete(friend);
+    }
+
+    @Override
+    public List<FriendResponse> getAllFriendsByUser() {
+        return friendRepository
+                .findFriends(CurrentUser.id(), FriendStatus.ACCEPTED)
+                .stream()
+                .map(f ->
+                        f.getUserLow().getId() == CurrentUser.id()
+                                ? f.getUserHigh()
+                                : f.getUserLow()
                 )
                 .map(userMapper::toUserResponse)
                 .map(FriendResponse::new)
@@ -131,7 +125,7 @@ public class FriendServiceImpl implements FriendService {
     @Override
     public List<FriendResponse> getAllFriendRequestsByUser() {
         return friendRepository
-                .findByAddresseeIdAndStatus(CurrentUser.id(), FriendStatus.PENDING)
+                .findPendingRequests(CurrentUser.id())
                 .stream()
                 .map(Friend::getRequester)
                 .map(userMapper::toUserResponse)
@@ -141,39 +135,38 @@ public class FriendServiceImpl implements FriendService {
 
     @Override
     public List<FriendResponse> getAllPotentialFriends() {
-        return userRepository.findAllPotentialFriends(CurrentUser.id())
+        return userRepository
+                .findAllPotentialFriends(CurrentUser.id())
                 .stream()
                 .map(userMapper::toUserResponse)
                 .map(FriendResponse::new)
                 .toList();
     }
 
-    private User getUserById(long userId) {
-        return userRepository.findById(userId)
+    private Friend findOrCreate(User a, User b) {
+        long low = Math.min(a.getId(), b.getId());
+        long high = Math.max(a.getId(), b.getId());
+
+        return friendRepository
+                .findByUserLowIdAndUserHighId(low, high)
+                .orElseGet(() -> Friend.builder()
+                        .userLow(getUser(low))
+                        .userHigh(getUser(high))
+                        .createdAt(Instant.now())
+                        .build());
+    }
+
+    private Friend getFriend(User a, User b) {
+        long low = Math.min(a.getId(), b.getId());
+        long high = Math.max(a.getId(), b.getId());
+
+        return friendRepository
+                .findByUserLowIdAndUserHighId(low, high)
+                .orElseThrow(() -> new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND));
+    }
+
+    private User getUser(long id) {
+        return userRepository.findById(id)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
-
-    private void checkIfAlreadyFriends(User user1, User user2) {
-        boolean areAlreadyFriends = friendRepository.existsByRequesterIdAndAddresseeIdAndStatus(
-                user1.getId(), user2.getId(), FriendStatus.ACCEPTED)
-                || friendRepository.existsByRequesterIdAndAddresseeIdAndStatus(
-                user2.getId(), user1.getId(), FriendStatus.ACCEPTED);
-
-        if (areAlreadyFriends) {
-            throw new AppException(ErrorCode.ALREADY_FRIENDS);
-        }
-    }
-
-    private void checkIfRequestPendingEitherWay(User user1, User user2) {
-        boolean pendingEitherWay =
-                friendRepository.existsByRequesterIdAndAddresseeIdAndStatus(
-                        user1.getId(), user2.getId(), FriendStatus.PENDING)
-                        || friendRepository.existsByRequesterIdAndAddresseeIdAndStatus(
-                        user2.getId(), user1.getId(), FriendStatus.PENDING);
-
-        if (pendingEitherWay) {
-            throw new AppException(ErrorCode.FRIEND_REQUEST_ALREADY);
-        }
-    }
-
 }

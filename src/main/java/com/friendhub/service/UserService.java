@@ -1,20 +1,12 @@
 package com.friendhub.service;
 
-import com.friendhub.dto.request.UserCreationRequest;
-import com.friendhub.dto.request.UserUpdateRequest;
-import com.friendhub.dto.response.UserResponse;
-
-import java.util.List;
+import com.friendhub.entity.User;
 
 public interface UserService {
 
-    UserResponse createUser(UserCreationRequest request);
+    User createUser(User user);
 
-    List<UserResponse> getAllUsers();
-
-    UserResponse getUserById(long userId);
-
-    UserResponse updateUser(long id, UserUpdateRequest request);
+    User getUserById(long userId);
 
     void deleteUser(long userId);
 

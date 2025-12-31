@@ -1,7 +1,6 @@
 package com.friendhub.dto.request;
 
 import com.friendhub.enums.Privacy;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +15,6 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PostCreationRequest {
 
-    @NotBlank(message = "Content is required")
     String content;
 
     Privacy privacy;

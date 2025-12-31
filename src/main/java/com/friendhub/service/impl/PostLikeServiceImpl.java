@@ -9,6 +9,7 @@ import com.friendhub.exception.AppException;
 import com.friendhub.repository.PostLikeRepository;
 import com.friendhub.repository.PostRepository;
 import com.friendhub.repository.UserRepository;
+import com.friendhub.service.NotificationService;
 import com.friendhub.service.PostLikeService;
 import com.friendhub.utils.CurrentUser;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +24,9 @@ import java.util.Optional;
 public class PostLikeServiceImpl implements PostLikeService {
 
     private final PostLikeRepository postLikeRepository;
-
     private final PostRepository postRepository;
-
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -45,6 +45,9 @@ public class PostLikeServiceImpl implements PostLikeService {
         if (existingLike.isPresent()) {
             postLikeRepository.delete(existingLike.get());
             isLiked = false;
+
+            notificationService.removeUnseenLikeNotification(
+                    user.getId(), post.getUser().getId());
         } else {
             PostLike postLike = PostLike.builder()
                     .post(post)
@@ -53,8 +56,12 @@ public class PostLikeServiceImpl implements PostLikeService {
                     .build();
 
             isLiked = true;
-
             postLikeRepository.save(postLike);
+
+            if (!(user.getId() == post.getUser().getId())) {
+                notificationService.createLikeNotification(
+                        user, post.getUser(), post);
+            }
         }
 
         int totalLikes = postLikeRepository.countByPostId(postId);

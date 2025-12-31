@@ -12,6 +12,7 @@ import com.friendhub.repository.CommentRepository;
 import com.friendhub.repository.PostRepository;
 import com.friendhub.repository.UserRepository;
 import com.friendhub.service.CommentService;
+import com.friendhub.service.NotificationService;
 import com.friendhub.utils.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
     private final CommentMapper commentMapper;
 
     @Override
@@ -40,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setPost(post);
         comment.setUser(user);
 
-
+        notificationService.createCommentNotification(user, post.getUser(), post);
 
         return commentMapper.toCommentResponse(commentRepository.save(comment));
     }

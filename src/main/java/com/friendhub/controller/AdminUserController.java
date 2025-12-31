@@ -38,7 +38,7 @@ public class AdminUserController {
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) UserRole role,
             @RequestParam(required = false) Gender gender,
-            @PageableDefault(size = 2) Pageable pageable) {
+            @PageableDefault(size = 5) Pageable pageable) {
         AdminUserSearchRequest request = AdminUserSearchRequest.builder()
                 .keyword(keyword)
                 .role(role)
@@ -82,7 +82,7 @@ public class AdminUserController {
     @PostMapping("/{userId}/ban")
     public ApiResponse<Void> banUser(
             @PathVariable("userId") long userId,
-            @RequestBody BanUserRequest request) {
+            @RequestBody @Valid BanUserRequest request) {
         adminUserService.banUser(userId, request);
         return ApiResponse.<Void>builder()
                 .message("User banned successfully.")

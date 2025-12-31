@@ -50,5 +50,21 @@ public class UserController {
                 .build();
     }
 
+    @PostMapping("/{userId}/lock")
+    public ApiResponse<Void> banUser() {
+        accountService.lockAccount();
+        return ApiResponse.<Void>builder()
+                .message("User looked successfully.")
+                .build();
+    }
+
+    @PostMapping("/{userId}/unlock")
+    public ApiResponse<Void> unBanUser() {
+        accountService.unLook();
+        return ApiResponse.<Void>builder()
+                .message("User unlocked successfully.")
+                .build();
+    }
+
 
 }

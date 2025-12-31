@@ -2,6 +2,7 @@ package com.friendhub.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.friendhub.enums.Gender;
+import com.friendhub.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -45,6 +46,16 @@ public class User {
     String address;
     Instant createdAt;
     Instant updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    UserStatus status;
+    String bannedReason;
+    Instant bannedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "banned_by")
+    @JsonIgnore
+    User bannedBy;
 
     @ManyToOne
     @JoinColumn(name = "role_id")

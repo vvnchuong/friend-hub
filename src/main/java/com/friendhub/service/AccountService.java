@@ -1,5 +1,6 @@
 package com.friendhub.service;
 
+import com.friendhub.dto.request.BanUserRequest;
 import com.friendhub.dto.request.ChangePasswordRequest;
 import com.friendhub.dto.request.UserCreationRequest;
 import com.friendhub.dto.request.UserUpdateRequest;
@@ -68,6 +69,22 @@ public class AccountService {
             throw new AppException(ErrorCode.PASSWORD_CONFIRM_MISMATCH);
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+    }
+
+    @Transactional
+    public void lockAccount() {
+        if (!userRepository.existsById(CurrentUser.id()))
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+
+        userRepository.lockAccount(CurrentUser.id());
+    }
+
+    @Transactional
+    public void unLook() {
+        if (!userRepository.existsById(CurrentUser.id()))
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+
+        userRepository.unLockAccount(CurrentUser.id());
     }
 
 }

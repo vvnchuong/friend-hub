@@ -3,6 +3,7 @@ package com.friendhub.controller;
 import com.friendhub.dto.request.AdminUserCreationRequest;
 import com.friendhub.dto.request.AdminUserSearchRequest;
 import com.friendhub.dto.request.AdminUserUpdateRequest;
+import com.friendhub.dto.request.BanUserRequest;
 import com.friendhub.dto.response.AdminUserResponse;
 import com.friendhub.dto.response.ApiResponse;
 import com.friendhub.dto.response.PageResponse;
@@ -24,7 +25,8 @@ public class AdminUserController {
     private final AdminUserService adminUserService;
 
     @PostMapping
-    public ApiResponse<UserResponse> createUser(@RequestBody @Valid AdminUserCreationRequest request) {
+    public ApiResponse<UserResponse> createUser(
+            @RequestBody @Valid AdminUserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .message("User created successfully.")
                 .result(adminUserService.createUser(request))
@@ -50,7 +52,8 @@ public class AdminUserController {
     }
 
     @GetMapping("/{userId}")
-    public ApiResponse<UserResponse> getUserById(@PathVariable("userId") long userId) {
+    public ApiResponse<UserResponse> getUserById(
+            @PathVariable("userId") long userId) {
         return ApiResponse.<UserResponse>builder()
                 .message("User retrieved successfully.")
                 .result(adminUserService.getUserDetail(userId))
@@ -58,8 +61,9 @@ public class AdminUserController {
     }
 
     @PutMapping("/{userId}")
-    public ApiResponse<UserResponse> updateUser(@PathVariable("userId") long userId,
-                                                @RequestBody @Valid AdminUserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateUser(
+            @PathVariable("userId") long userId,
+            @RequestBody @Valid AdminUserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .message("User updated successfully.")
                 .result(adminUserService.updateUser(userId, request))
@@ -67,11 +71,32 @@ public class AdminUserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ApiResponse<Void> deleteUser(@PathVariable("userId") long userId) {
+    public ApiResponse<Void> deleteUser(
+            @PathVariable("userId") long userId) {
         adminUserService.deleteUser(userId);
         return ApiResponse.<Void>builder()
                 .message("User deleted successfully.")
                 .build();
     }
+
+    @PostMapping("/{userId}/ban")
+    public ApiResponse<Void> banUser(
+            @PathVariable("userId") long userId,
+            @RequestBody BanUserRequest request) {
+        adminUserService.banUser(userId, request);
+        return ApiResponse.<Void>builder()
+                .message("User banned successfully.")
+                .build();
+    }
+
+    @PostMapping("/{userId}/unban")
+    public ApiResponse<Void> unBanUser(
+            @PathVariable("userId") long userId) {
+        adminUserService.unBanUser(userId);
+        return ApiResponse.<Void>builder()
+                .message("User unbanned successfully.")
+                .build();
+    }
+
 
 }

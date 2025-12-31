@@ -3,6 +3,7 @@ package com.friendhub.service;
 import com.friendhub.dto.request.AdminUserCreationRequest;
 import com.friendhub.dto.request.AdminUserSearchRequest;
 import com.friendhub.dto.request.AdminUserUpdateRequest;
+import com.friendhub.dto.request.BanUserRequest;
 import com.friendhub.dto.response.AdminUserResponse;
 import com.friendhub.dto.response.PageResponse;
 import com.friendhub.dto.response.UserResponse;
@@ -15,6 +16,7 @@ import com.friendhub.repository.PostRepository;
 import com.friendhub.repository.RoleRepository;
 import com.friendhub.repository.UserRepository;
 import com.friendhub.repository.specification.UserSpecification;
+import com.friendhub.utils.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +61,6 @@ public class AdminUserService {
         return new PageResponse<>(
                 page.getContent()
                         .stream()
-//                        .map(userMapper::toAdminUserResponse)
                         .map(user -> {
                             long totalPosts = postRepository.countByUserId(user.getId());
                             long totalFriends = userRepository.countAllFriendsOfUser(user.getId());
@@ -102,6 +103,22 @@ public class AdminUserService {
     @Transactional
     public void deleteUser(long userId) {
         userService.deleteUser(userId);
+    }
+
+    @Transactional
+    public void banUser(long userId, BanUserRequest request) {
+        if (!userRepository.existsById(userId))
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+
+        userRepository.banUser(userId, request.getReason(), CurrentUser.id());
+    }
+
+    @Transactional
+    public void unBanUser(long userId) {
+        if (!userRepository.existsById(userId))
+            throw new AppException(ErrorCode.USER_NOT_FOUND);
+
+        userRepository.unBanUser(userId);
     }
 
 }

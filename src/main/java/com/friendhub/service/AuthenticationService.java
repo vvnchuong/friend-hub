@@ -6,6 +6,7 @@ import com.friendhub.dto.response.AuthenticationResponse;
 import com.friendhub.dto.response.IntrospectResponse;
 import com.friendhub.entity.User;
 import com.friendhub.enums.ErrorCode;
+import com.friendhub.enums.UserStatus;
 import com.friendhub.exception.AppException;
 import com.friendhub.repository.InvalidatedTokenRepository;
 import com.friendhub.repository.UserRepository;
@@ -69,6 +70,9 @@ public class AuthenticationService {
 
         if (!authenticated)
             throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        if (user.getStatus() == UserStatus.BANNED)
+            throw new AppException(ErrorCode.USER_BANNED);
 
         String token = generateToken(user);
 

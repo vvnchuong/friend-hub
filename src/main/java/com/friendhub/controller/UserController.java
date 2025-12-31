@@ -19,7 +19,8 @@ public class UserController {
     private final AccountService accountService;
 
     @PostMapping
-    public ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
+    public ApiResponse<UserResponse> createUser(
+            @RequestBody @Valid UserCreationRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .message("User created successfully.")
                 .result(accountService.register(request))
@@ -27,7 +28,8 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public ApiResponse<UserResponse> getUserById(@PathVariable("userId") long userId) {
+    public ApiResponse<UserResponse> getUserById(
+            @PathVariable("userId") long userId) {
         return ApiResponse.<UserResponse>builder()
                 .message("User retrieved successfully.")
                 .result(accountService.getUserById(userId))
@@ -35,7 +37,8 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ApiResponse<UserResponse> updateMyProfile(@RequestBody @Valid UserUpdateRequest request) {
+    public ApiResponse<UserResponse> updateMyProfile(
+            @RequestBody @Valid UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .message("User updated successfully.")
                 .result(accountService.updateMyProfile(request))
@@ -43,7 +46,8 @@ public class UserController {
     }
 
     @PutMapping("/me/change-password")
-    public ApiResponse<Void> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+    public ApiResponse<Void> changePassword(
+            @Valid @RequestBody ChangePasswordRequest request) {
         accountService.changePassword(request);
         return ApiResponse.<Void>builder()
                 .message("Change your password successfully.")
@@ -51,7 +55,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/lock")
-    public ApiResponse<Void> banUser() {
+    public ApiResponse<Void> lockUser() {
         accountService.lockAccount();
         return ApiResponse.<Void>builder()
                 .message("User looked successfully.")
@@ -59,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/unlock")
-    public ApiResponse<Void> unBanUser() {
+    public ApiResponse<Void> unlockUser() {
         accountService.unLook();
         return ApiResponse.<Void>builder()
                 .message("User unlocked successfully.")

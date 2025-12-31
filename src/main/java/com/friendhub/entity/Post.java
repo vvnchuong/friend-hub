@@ -1,5 +1,6 @@
 package com.friendhub.entity;
 
+import com.friendhub.enums.CommentPolicy;
 import com.friendhub.enums.Privacy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -28,6 +29,9 @@ public class Post {
     @Enumerated(EnumType.STRING)
     Privacy privacy;
 
+    @Enumerated(EnumType.STRING)
+    CommentPolicy commentPolicy;
+
     Instant createdAt;
     Instant updatedAt;
 
@@ -35,13 +39,20 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<PostLike> postLikes = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<PostMedia> postMedia = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+    Group group;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<Notification> notifications = new ArrayList<>();
 
 }

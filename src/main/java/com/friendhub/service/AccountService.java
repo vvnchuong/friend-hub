@@ -1,6 +1,5 @@
 package com.friendhub.service;
 
-import com.friendhub.dto.request.BanUserRequest;
 import com.friendhub.dto.request.ChangePasswordRequest;
 import com.friendhub.dto.request.UserCreationRequest;
 import com.friendhub.dto.request.UserUpdateRequest;
@@ -11,8 +10,6 @@ import com.friendhub.enums.ErrorCode;
 import com.friendhub.enums.UserRole;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.UserMapper;
-import com.friendhub.repository.RoleRepository;
-import com.friendhub.repository.UserRepository;
 import com.friendhub.utils.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,20 +20,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final UserRepository userRepository;
     private final UserService userService;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Transactional
     public UserResponse register(UserCreationRequest request) {
-        if (userRepository.existsByEmail(request.getEmail()))
+        if (userService.isExistedByEmail(request.getEmail()))
             throw new AppException(ErrorCode.USER_ALREADY_EXISTED);
 
         User user = userMapper.toUser(request);
-        Role role = roleRepository.findByName(UserRole.MEMBER)
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        Role role = roleService.getRoleByName(UserRole.MEMBER);
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(role);
@@ -46,12 +41,17 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public UserResponse getUserById(long userId) {
-        return userMapper.toUserResponse(userService.getUserById(userId));
+        User user = userService.getUserById(userId);
+        userService.assertActive(user);
+
+        return userMapper.toUserResponse(user);
     }
 
     @Transactional
     public UserResponse updateMyProfile(UserUpdateRequest request) {
         User user = userService.getUserById(CurrentUser.id());
+
+        userService.assertActive(user);
 
         userMapper.updateUser(user, request);
 
@@ -68,23 +68,18 @@ public class AccountService {
         if (!request.getNewPassword().equals(request.getConfirmPassword()))
             throw new AppException(ErrorCode.PASSWORD_CONFIRM_MISMATCH);
 
-        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userService.changePassword(user,
+                passwordEncoder.encode(request.getNewPassword()));
     }
 
     @Transactional
     public void lockAccount() {
-        if (!userRepository.existsById(CurrentUser.id()))
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-
-        userRepository.lockAccount(CurrentUser.id());
+        userService.lockAccount(CurrentUser.id());
     }
 
     @Transactional
-    public void unLook() {
-        if (!userRepository.existsById(CurrentUser.id()))
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-
-        userRepository.unLockAccount(CurrentUser.id());
+    public void unLockAccount() {
+        userService.unLockAccount(CurrentUser.id());
     }
 
 }

@@ -50,12 +50,12 @@ public class UserController {
             @Valid @RequestBody ChangePasswordRequest request) {
         accountService.changePassword(request);
         return ApiResponse.<Void>builder()
-                .message("Change your password successfully.")
+                .message("Your password changed successfully.")
                 .build();
     }
 
     @PostMapping("/{userId}/lock")
-    public ApiResponse<Void> lockUser() {
+    public ApiResponse<Void> lockAccount() {
         accountService.lockAccount();
         return ApiResponse.<Void>builder()
                 .message("User looked successfully.")
@@ -63,8 +63,8 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/unlock")
-    public ApiResponse<Void> unlockUser() {
-        accountService.unLook();
+    public ApiResponse<Void> unlockAccount() {
+        accountService.unLockAccount();
         return ApiResponse.<Void>builder()
                 .message("User unlocked successfully.")
                 .build();

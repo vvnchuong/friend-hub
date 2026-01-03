@@ -12,9 +12,6 @@ import com.friendhub.entity.User;
 import com.friendhub.enums.ErrorCode;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.UserMapper;
-import com.friendhub.repository.PostRepository;
-import com.friendhub.repository.RoleRepository;
-import com.friendhub.repository.UserRepository;
 import com.friendhub.repository.specification.UserSpecification;
 import com.friendhub.utils.CurrentUser;
 import lombok.RequiredArgsConstructor;
@@ -29,21 +26,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminUserService {
 
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final UserService userService;
-    private final RoleRepository roleRepository;
+    private final PostService postService;
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
     @Transactional
     public UserResponse createUser(AdminUserCreationRequest request) {
-        if (userRepository.existsByEmail(request.getEmail()))
+        if (userService.isExistedByEmail(request.getEmail()))
             throw new AppException(ErrorCode.USER_ALREADY_EXISTED);
 
         User user = userMapper.toUser(request);
-        Role role = roleRepository.findByName(request.getRole())
-                .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+        Role role = roleService.getRoleByName(request.getRole());
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(role);
@@ -54,29 +49,28 @@ public class AdminUserService {
     @Transactional(readOnly = true)
     public PageResponse<AdminUserResponse> getAllUsers(AdminUserSearchRequest request,
                                                        Pageable pageable) {
+
         Specification<User> spec = UserSpecification.build(request);
 
-        Page<User> page = userRepository.findAll(spec, pageable);
+        Page<User> page = userService.getAllUsers(spec, pageable);
 
-        return new PageResponse<>(
-                page.getContent()
-                        .stream()
+        return PageResponse.<AdminUserResponse>builder()
+                .content(page.getContent().stream()
                         .map(user -> {
-                            long totalPosts = postRepository.countByUserId(user.getId());
-                            long totalFriends = userRepository.countAllFriendsOfUser(user.getId());
+                            Long totalPosts = postService.getTotalPostsOfUser(user.getId());
+                            Long totalFriends = userService.countAllFriendsOfUser(user.getId());
                             AdminUserResponse response = userMapper.toAdminUserResponse(user);
                             response.setTotalPosts(totalPosts);
                             response.setTotalFriends(totalFriends);
                             return response;
-                        })
-                        .toList(),
-                page.getNumber(),
-                page.getSize(),
-                page.getTotalElements(),
-                page.getTotalPages(),
-                page.isFirst(),
-                page.isLast()
-        );
+                        }).toList())
+                .page(page.getNumber())
+                .size(page.getSize())
+                .totalElements(page.getTotalElements())
+                .totalPages(page.getTotalPages())
+                .first(page.isFirst())
+                .last(page.isLast())
+                .build();
     }
 
     @Transactional(readOnly = true)
@@ -86,14 +80,14 @@ public class AdminUserService {
 
     @Transactional
     public UserResponse updateUser(long userId, AdminUserUpdateRequest request) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        User user = userService.getUserById(userId);
+
+        userService.assertActive(user);
 
         userMapper.updateAdminUser(user, request);
 
         if (request.getRole() != null) {
-            Role role = roleRepository.findByName(request.getRole())
-                    .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
+            Role role = roleService.getRoleByName(request.getRole());
             user.setRole(role);
         }
 
@@ -107,18 +101,12 @@ public class AdminUserService {
 
     @Transactional
     public void banUser(long userId, BanUserRequest request) {
-        if (!userRepository.existsById(userId))
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-
-        userRepository.banUser(userId, request.getReason(), CurrentUser.id());
+        userService.banUser(userId, request.getReason(), CurrentUser.id());
     }
 
     @Transactional
     public void unBanUser(long userId) {
-        if (!userRepository.existsById(userId))
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-
-        userRepository.unBanUser(userId);
+        userService.unBanUser(userId);
     }
 
 }

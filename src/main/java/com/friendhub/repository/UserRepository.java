@@ -33,7 +33,7 @@ public interface UserRepository extends JpaRepository<User, Long>,
             "FROM friends " +
             "WHERE status = 'ACCEPTED' " +
             "AND :userId IN (requester_id, user_high_id, user_low_id)", nativeQuery = true)
-    long countAllFriendsOfUser(@Param("userId") long userId);
+    Long countAllFriendsOfUser(@Param("userId") long userId);
 
     @Modifying
     @Query(value = "UPDATE users " +

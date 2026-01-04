@@ -1,5 +1,6 @@
 package com.friendhub.dto.response;
 
+import com.friendhub.entity.Group;
 import com.friendhub.enums.Privacy;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -26,5 +27,6 @@ public class PostResponse {
     int totalLikes;
     int totalComments;
     boolean isLiked;
+    GroupResponse group;
 
 }

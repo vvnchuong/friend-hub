@@ -1,9 +1,9 @@
 package com.friendhub.mapper;
 
-import com.friendhub.dto.request.GroupPostCreationRequest;
 import com.friendhub.dto.request.PostCreationRequest;
 import com.friendhub.dto.request.PostUpdateRequest;
 import com.friendhub.dto.response.PostResponse;
+import com.friendhub.entity.Group;
 import com.friendhub.entity.Post;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;

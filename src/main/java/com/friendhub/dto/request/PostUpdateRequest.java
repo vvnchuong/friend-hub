@@ -19,6 +19,4 @@ public class PostUpdateRequest {
 
     Privacy privacy;
 
-    String mediaUrl;
-
 }

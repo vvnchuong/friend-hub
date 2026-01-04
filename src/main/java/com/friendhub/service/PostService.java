@@ -1,27 +1,35 @@
 package com.friendhub.service;
 
-import com.friendhub.dto.request.PostCreationRequest;
-import com.friendhub.dto.request.PostUpdateRequest;
-import com.friendhub.dto.response.PostResponse;
+import com.friendhub.entity.Post;
+import com.friendhub.entity.PostMedia;
+import com.friendhub.entity.User;
 
 import java.util.List;
 
 public interface PostService {
 
-    PostResponse createPost(PostCreationRequest request);
+    Post createPost(Post post, List<PostMedia> mediaList);
 
-    List<PostResponse> getAllPosts();
+//    List<PostResponse> getAllPosts();
 
-    PostResponse getPostById(long postId);
+    Post getPostById(long postId);
 
-    List<PostResponse> getMyPosts();
+    List<Post> getMyPosts(long userId, Long lastId, int pageSize);
 
-    List<PostResponse> getPostsOfUser(long userId);
+    List<Post> getPostsOfUser(long userId, Long lastId, long limit);
 
-    List<PostResponse> getAllFriendPosts();
+    List<Post> getAllMyFriendsAndMyPosts(long userId);
 
-    PostResponse updatePost(long postId, PostUpdateRequest request);
+    void updatePost(Post post);
 
     void deletePost(long postId);
+
+    void updateCommentPolicy(Post post);
+
+    boolean isExistedById(long postId);
+
+    void validateReportable(long postId, User reporter);
+
+    Long getTotalPostsOfUser(long userId);
 
 }

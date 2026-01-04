@@ -35,4 +35,9 @@ public class GroupMember {
     @JoinColumn(name = "user_id")
     User user;
 
+    @PrePersist
+    protected void onCreate() {
+        this.joinedAt = Instant.now();
+    }
+
 }

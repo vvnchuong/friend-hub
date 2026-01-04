@@ -33,7 +33,7 @@ public interface GroupMapper {
     @Mapping(target = "createdAt", source = "group.createdAt")
     @Mapping(target = "updatedAt", source = "group.updatedAt")
     @Mapping(target = "totalMembers", source = "totalMembers")
-    GroupResponse toResponse(Group group, User creator, int totalMembers);
+    GroupResponse toResponse(Group group, User creator, long totalMembers);
 
     @Mapping(target = "id", source = "group.id")
     @Mapping(target = "coverUrl", source = "group.coverUrl")
@@ -44,8 +44,8 @@ public interface GroupMapper {
     @Mapping(target = "status", source = "creator.status", ignore = true)
     GroupDetailResponse toGroupDetailResponse(Group group,
                                               User creator,
-                                              int totalMembers,
-                                              int totalPosts,
+                                              long totalMembers,
+                                              long totalPosts,
                                               boolean isJoined,
                                               JoinRequestStatus status,
                                               GroupRole role,
@@ -53,9 +53,5 @@ public interface GroupMapper {
 
     void updateGroup(@MappingTarget Group group, GroupUpdateRequest request);
 
-    @AfterMapping
-    default void setUpdateAt(@MappingTarget Group group) {
-        group.setUpdatedAt(Instant.now());
-    }
 
 }

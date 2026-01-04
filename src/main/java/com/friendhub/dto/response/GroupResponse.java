@@ -23,7 +23,7 @@ public class GroupResponse {
     UserResponse creator;
     Instant createdAt;
     Instant updatedAt;
-    int totalMembers;
+    long totalMembers;
 
 
 }

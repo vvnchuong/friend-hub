@@ -12,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AdminUpdateCommentPolicyRequest {
+public class UpdateCommentPolicyRequest {
 
     @NotBlank(message = "Comment policy is required")
     CommentPolicy policy;

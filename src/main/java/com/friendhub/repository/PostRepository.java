@@ -36,7 +36,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                               @Param("lastId") Long lastId,
                               @Param("limit") int limit);
 
-    int countByGroupId(long groupId);
+    Long countByGroupId(long groupId);
 
     @Query(value = "SELECT DISTINCT p.* " +
             "FROM posts p " +

@@ -57,7 +57,7 @@ public class AdminUserService {
         return PageResponse.<AdminUserResponse>builder()
                 .content(page.getContent().stream()
                         .map(user -> {
-                            Long totalPosts = postService.getTotalPostsOfUser(user.getId());
+                            Long totalPosts = postService.countTotalPostsOfUser(user.getId());
                             Long totalFriends = userService.countAllFriendsOfUser(user.getId());
                             AdminUserResponse response = userMapper.toAdminUserResponse(user);
                             response.setTotalPosts(totalPosts);

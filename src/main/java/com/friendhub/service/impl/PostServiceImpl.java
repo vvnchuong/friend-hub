@@ -89,8 +89,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Long getTotalPostsOfUser(long userId) {
+    public Long countTotalPostsOfUser(long userId) {
         return postRepository.countByUserId(userId);
+    }
+
+    @Override
+    public Long countTotalPostsByGroupId(long groupId) {
+        return postRepository.countByGroupId(groupId);
     }
 
 }

@@ -30,6 +30,8 @@ public interface PostService {
 
     void validateReportable(long postId, User reporter);
 
-    Long getTotalPostsOfUser(long userId);
+    Long countTotalPostsOfUser(long userId);
+
+    Long countTotalPostsByGroupId(long groupId);
 
 }

@@ -24,4 +24,6 @@ public interface FriendService {
 
     List<FriendResponse> getAllPotentialFriends();
 
+    boolean areFriends(long userId1, long userId2);
+
 }

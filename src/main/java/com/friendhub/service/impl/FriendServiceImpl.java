@@ -143,6 +143,18 @@ public class FriendServiceImpl implements FriendService {
                 .toList();
     }
 
+    @Override
+    public boolean areFriends(long userId1, long userId2) {
+        long lowId = Math.min(userId1, userId2);
+        long highId = Math.max(userId1, userId2);
+
+        return friendRepository.existsByUserLowIdAndUserHighIdAndStatus(
+                lowId,
+                highId,
+                FriendStatus.ACCEPTED
+        );
+    }
+
     private Friend findOrCreate(User a, User b) {
         long low = Math.min(a.getId(), b.getId());
         long high = Math.max(a.getId(), b.getId());

@@ -10,7 +10,7 @@ public interface PostService {
 
     Post createPost(Post post, List<PostMedia> mediaList);
 
-//    List<PostResponse> getAllPosts();
+    List<Post> getPostByUserAndGroup(long userId, long groupId);
 
     Post getPostById(long postId);
 
@@ -23,6 +23,8 @@ public interface PostService {
     void updatePost(Post post);
 
     void deletePost(long postId);
+
+    void deleteAllPosts(List<Post> posts);
 
     void updateCommentPolicy(Post post);
 

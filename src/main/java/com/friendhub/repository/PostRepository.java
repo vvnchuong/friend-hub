@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    List<Post> findAllByOrderByCreatedAtDesc();
+    List<Post> findAllByUserIdAndGroupId(long userId, long groupId);
 
     @Query(value = "SELECT p.* " +
             "FROM posts p " +

@@ -33,6 +33,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getPostByUserAndGroup(long userId, long groupId) {
+        return postRepository.findAllByUserIdAndGroupId(userId, groupId);
+    }
+
+    @Override
     public Post getPostById(long postId) {
         return postRepository.findById(postId)
                 .orElseThrow(() -> new AppException(ErrorCode.POST_NOT_FOUND));
@@ -64,6 +69,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePost(long postId) {
         postRepository.deleteById(postId);
+    }
+
+    @Override
+    public void deleteAllPosts(List<Post> posts) {
+        postRepository.deleteAll(posts);
     }
 
     @Override

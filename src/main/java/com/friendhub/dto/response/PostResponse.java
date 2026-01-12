@@ -1,6 +1,5 @@
 package com.friendhub.dto.response;
 
-import com.friendhub.entity.Group;
 import com.friendhub.enums.Privacy;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,7 +19,7 @@ public class PostResponse {
     long id;
     String content;
     List<PostMediaResponse> mediaList;
-    UserResponse author;
+    UserBasicInfoResponse author;
     Instant createdAt;
     Instant updatedAt;
     Privacy privacy;

@@ -2,6 +2,7 @@ package com.friendhub.service;
 
 import com.friendhub.dto.request.PostCreationRequest;
 import com.friendhub.dto.request.PostUpdateRequest;
+import com.friendhub.dto.request.SharePostRequest;
 import com.friendhub.dto.request.UpdateCommentPolicyRequest;
 import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.PostResponse;
@@ -10,6 +11,7 @@ import com.friendhub.entity.PostMedia;
 import com.friendhub.entity.User;
 import com.friendhub.enums.CommentPolicy;
 import com.friendhub.enums.ErrorCode;
+import com.friendhub.enums.Privacy;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.PostMapper;
 import com.friendhub.mapper.PostMediaMapper;
@@ -18,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,6 +32,7 @@ public class UserPostService {
     private final PostQueryService postQueryService;
     private final UserService userService;
     private final FriendService friendService;
+    private final GroupService groupService;
     private final PostMapper postMapper;
     private final PostMediaMapper postMediaMapper;
 
@@ -82,13 +86,10 @@ public class UserPostService {
         if (hasNext)
             posts = posts.subList(0, pageSize);
 
-        Long nextCursor = hasNext ? posts.get(posts.size() - 1).getId() : null;
+        Long nextCursor = hasNext ? posts.getLast().getId() : null;
 
         List<PostResponse> responses = posts.stream()
-                .map(post -> {
-                    return postQueryService
-                            .build(post, CurrentUser.id());
-                })
+                .map(post -> postQueryService.build(post, CurrentUser.id()))
                 .toList();
 
         return CursorResponse.<PostResponse>builder()
@@ -112,7 +113,7 @@ public class UserPostService {
         if (hasNext)
             posts = posts.subList(0, pageSize);
 
-        Long nextCursor = hasNext ? posts.get(posts.size() - 1).getId() : null;
+        Long nextCursor = hasNext ? posts.getLast().getId() : null;
 
         List<PostResponse> responses = posts.stream()
                 .filter(post -> {
@@ -124,9 +125,7 @@ public class UserPostService {
                         case PRIVATE -> false;
                     };
                 })
-                .map(post -> {
-                    return postQueryService.build(post, CurrentUser.id());
-                })
+                .map(post -> postQueryService.build(post, CurrentUser.id()))
                 .toList();
 
         return CursorResponse.<PostResponse>builder()
@@ -137,12 +136,12 @@ public class UserPostService {
     }
 
     @Transactional(readOnly = true)
+    // sua cai nay
     public List<PostResponse> getAllMyFriendsAndMyPosts() {
         return postService.getAllMyFriendsAndMyPosts(CurrentUser.id())
                 .stream()
-                .map(post -> {
-                    return postQueryService.build(post, CurrentUser.id());
-                }).toList();
+                .map(post -> postQueryService.build(post, CurrentUser.id()))
+                .toList();
     }
 
     @Transactional
@@ -155,6 +154,8 @@ public class UserPostService {
         postMapper.updatePost(post, request);
 
         postService.updatePost(post);
+
+        post.setUpdatedAt(Instant.now());
 
         return postMapper.toPostResponse(post);
     }
@@ -187,5 +188,34 @@ public class UserPostService {
 
         postService.updateCommentPolicy(post);
     }
+
+    @Transactional
+    public PostResponse sharePost(long originalPostId, SharePostRequest request) {
+        User user = userService.getUserById(CurrentUser.id());
+
+        Post originalPost = postService.getPostById(originalPostId);
+
+        if (originalPost.getPrivacy() == Privacy.PRIVATE ||
+                originalPost.getGroup() != null)
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+
+        if (Objects.equals(originalPost.getUser().getId(), CurrentUser.id()))
+            throw new AppException(ErrorCode.CANNOT_SHARE_OWN_POST);
+
+        if (originalPost.getPrivacy() == Privacy.FRIEND &&
+                !friendService.areFriends(originalPost.getUser().getId(), CurrentUser.id()))
+            throw new AppException(ErrorCode.NOT_FRIENDS);
+
+        Post sharePost = new Post();
+        sharePost.setUser(user);
+        sharePost.setContent(request.getContent());
+        sharePost.setPrivacy(request.getPrivacy());
+        sharePost.setOriginalPost(originalPost);
+
+        Post saved = postService.createPost(sharePost, List.of());
+
+        return postQueryService.build(saved, CurrentUser.id());
+    }
+
 
 }

@@ -2,6 +2,7 @@ package com.friendhub.controller;
 
 import com.friendhub.dto.request.PostCreationRequest;
 import com.friendhub.dto.request.PostUpdateRequest;
+import com.friendhub.dto.request.SharePostRequest;
 import com.friendhub.dto.request.UpdateCommentPolicyRequest;
 import com.friendhub.dto.response.ApiResponse;
 import com.friendhub.dto.response.CursorResponse;
@@ -91,6 +92,16 @@ public class PostController {
         userPostService.deletePost(postId);
         return ApiResponse.<Void>builder()
                 .message("Post deleted successfully.")
+                .build();
+    }
+
+    @PostMapping("/{postId}/share")
+    public ApiResponse<PostResponse> sharePost(
+            @RequestBody SharePostRequest request,
+            @PathVariable("postId") long postId) {
+        return ApiResponse.<PostResponse>builder()
+                .message("Post shared successfully.")
+                .result(userPostService.sharePost(postId, request))
                 .build();
     }
 

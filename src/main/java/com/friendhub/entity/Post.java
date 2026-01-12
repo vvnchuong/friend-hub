@@ -39,6 +39,10 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
+    @ManyToOne
+    @JoinColumn(name = "original_post_id")
+    Post originalPost;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<PostLike> postLikes = new ArrayList<>();
 
@@ -54,5 +58,10 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<Notification> notifications = new ArrayList<>();
+
+    @PrePersist
+    void onCreate() {
+        createdAt = Instant.now();
+    }
 
 }

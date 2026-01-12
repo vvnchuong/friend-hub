@@ -35,7 +35,7 @@ public class AdminUserService {
     @Transactional
     public UserResponse createUser(AdminUserCreationRequest request) {
         if (userService.isExistedByEmail(request.getEmail()))
-            throw new AppException(ErrorCode.USER_ALREADY_EXISTED);
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
 
         User user = userMapper.toUser(request);
         Role role = roleService.getRoleByName(request.getRole());

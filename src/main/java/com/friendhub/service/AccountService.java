@@ -28,7 +28,7 @@ public class AccountService {
     @Transactional
     public UserResponse register(UserCreationRequest request) {
         if (userService.isExistedByEmail(request.getEmail()))
-            throw new AppException(ErrorCode.USER_ALREADY_EXISTED);
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
 
         User user = userMapper.toUser(request);
         Role role = roleService.getRoleByName(UserRole.MEMBER);

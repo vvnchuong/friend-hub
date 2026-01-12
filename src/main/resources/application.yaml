@@ -3,11 +3,23 @@ server:
   servlet:
     context-path: /friend-hub
 
+#logging:
+#  level:
+#    org.springframework.messaging: DEBUG
+#    org.springframework.web.socket: DEBUG
+#    org.springframework.web: DEBUG
+#    org.springframework.web.servlet.DispatcherServlet: DEBUG
+
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/test
-    username: root
-    password:
+    username: USER_USERNAME
+    password: YOUR_PASSWORD
   jpa:
     hibernate:
       ddl-auto: update
@@ -23,4 +35,4 @@ jwt:
   refreshableDuration: 86400
 
 upload-file:
-  base-uri: YOUR_FILE_PATH
+  base-uri: YOUR_FOLDER_PATH

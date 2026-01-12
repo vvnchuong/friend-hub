@@ -44,7 +44,7 @@ public class FriendServiceImpl implements FriendService {
             throw new AppException(ErrorCode.ALREADY_FRIENDS);
         }
         if (friend.getStatus() == FriendStatus.PENDING) {
-            throw new AppException(ErrorCode.FRIEND_REQUEST_ALREADY);
+            throw new AppException(ErrorCode.FRIEND_REQUEST_ALREADY_PENDING);
         }
         if (friend.getStatus() == FriendStatus.BLOCKED) {
             throw new AppException(ErrorCode.UNAUTHORIZED);

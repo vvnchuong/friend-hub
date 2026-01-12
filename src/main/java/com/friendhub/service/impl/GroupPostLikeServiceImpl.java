@@ -4,11 +4,10 @@ import com.friendhub.dto.response.PostLikeResponse;
 import com.friendhub.entity.Post;
 import com.friendhub.entity.PostLike;
 import com.friendhub.entity.User;
+import com.friendhub.enums.ErrorCode;
+import com.friendhub.exception.AppException;
 import com.friendhub.repository.PostLikeRepository;
-import com.friendhub.service.NotificationService;
-import com.friendhub.service.PostLikeService;
-import com.friendhub.service.PostService;
-import com.friendhub.service.UserService;
+import com.friendhub.service.*;
 import com.friendhub.utils.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,18 +18,22 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class PostLikeServiceImpl implements PostLikeService {
+public class GroupPostLikeServiceImpl implements GroupPostLikeService {
 
     private final PostLikeRepository postLikeRepository;
     private final PostService postService;
     private final UserService userService;
+    private final GroupMemberService groupMemberService;
     private final NotificationService notificationService;
 
     @Override
     @Transactional
-    public PostLikeResponse likeOrUnLikePost(long postId) {
-        Post post = postService.getPostById(postId);
+    public PostLikeResponse likeOrUnlikePostInGroup(long groupId, long postId) {
+        Post post = getPostInGroup(groupId, postId);
         User user = userService.getUserById(CurrentUser.id());
+
+        if (!groupMemberService.isGroupMember(groupId, CurrentUser.id()))
+            throw new AppException(ErrorCode.GROUP_MEMBER_NOT_FOUND);
 
         Optional<PostLike> existingLike = postLikeRepository
                 .findByPostIdAndUserId(postId, user.getId());
@@ -53,10 +56,10 @@ public class PostLikeServiceImpl implements PostLikeService {
             isLiked = true;
             postLikeRepository.save(postLike);
 
-            if (!(user.getId() == post.getUser().getId())) {
+            if (!(user.getId() == post.getUser().getId()))
                 notificationService.createLikeNotification(
                         user, post.getUser(), post);
-            }
+
         }
 
         int totalLikes = postLikeRepository.countByPostId(postId);
@@ -67,6 +70,15 @@ public class PostLikeServiceImpl implements PostLikeService {
                 .totalLikes(totalLikes)
                 .isLiked(isLiked)
                 .build();
+    }
+
+    private Post getPostInGroup(long groupId, long postId) {
+        Post post = postService.getPostById(postId);
+
+        if (post.getGroup().getId() != groupId)
+            throw new AppException(ErrorCode.POST_NOT_IN_GROUP);
+
+        return post;
     }
 
 }

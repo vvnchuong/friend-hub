@@ -16,6 +16,7 @@ public interface PostMapper {
 
     @Mapping(target = "author", source = "user")
     @Mapping(target = "originalPost.author", source = "originalPost.user")
+    @Mapping(target = "originalPost.mediaList", source = "originalPost.postMedia")
     PostResponse toPostResponse(Post post);
 
     void updatePost(@MappingTarget Post post, PostUpdateRequest request);

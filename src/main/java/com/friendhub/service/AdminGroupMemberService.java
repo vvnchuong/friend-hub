@@ -28,7 +28,7 @@ public class AdminGroupMemberService {
     public CursorResponse<GroupMemberResponse> getAllMembers(
             long groupId, Long lastId) {
 
-        int pageSize = 1;
+        int pageSize = 10;
         List<GroupMember> groupMembers = groupMemberService
                 .getAllMembersInGroup(groupId, lastId, pageSize + 1);
 
@@ -57,9 +57,6 @@ public class AdminGroupMemberService {
         performMemberRemoval(groupId, member);
     }
 
-    // ban or unban a group
-
-
     private void performMemberRemoval(long groupId, GroupMember member) {
         long memberId = member.getUser().getId();
 
@@ -73,7 +70,7 @@ public class AdminGroupMemberService {
         List<Post> posts = postService.getPostByUserAndGroup(memberId, groupId);
         postService.deleteAllPosts(posts);
 
-        // remove all notifications and reports (như comment của bạn)
+        // remove all notifications and reports
 
         groupMemberService.deleteMember(member);
     }

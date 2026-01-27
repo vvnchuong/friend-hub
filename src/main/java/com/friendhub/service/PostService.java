@@ -3,12 +3,17 @@ package com.friendhub.service;
 import com.friendhub.entity.Post;
 import com.friendhub.entity.PostMedia;
 import com.friendhub.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
 public interface PostService {
 
     Post createPost(Post post, List<PostMedia> mediaList);
+
+    Page<Post> getAllPosts(Specification<Post> spec, Pageable pageable);
 
     List<Post> getPostByUserAndGroup(long userId, long groupId);
 

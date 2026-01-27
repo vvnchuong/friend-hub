@@ -8,6 +8,7 @@ import com.friendhub.dto.response.GroupResponse;
 import com.friendhub.entity.*;
 import com.friendhub.enums.ErrorCode;
 import com.friendhub.enums.GroupRole;
+import com.friendhub.enums.GroupStatus;
 import com.friendhub.enums.JoinRequestStatus;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.GroupMapper;
@@ -37,6 +38,7 @@ public class UserGroupService {
 
         Group group = groupMapper.toGroup(request);
         group.setCreatedBy(creator.getId());
+        group.setStatus(GroupStatus.ACTIVE);
         group = groupService.createGroup(group);
 
         GroupMemberId memberId = new GroupMemberId(group.getId(), CurrentUser.id());
@@ -55,7 +57,7 @@ public class UserGroupService {
     @Transactional(readOnly = true)
     public CursorResponse<GroupResponse> getSuggestedGroups(
             String keyword, Long lastId) {
-        int pageSize = 3;
+        int pageSize = 9;
 
         List<Group> groups = groupService
                 .getSuggestedGroups(
@@ -84,7 +86,6 @@ public class UserGroupService {
     @Transactional(readOnly = true)
     public GroupDetailResponse getGroupDetail(long groupId) {
         Group group = groupService.getGroupById(groupId);
-
         User user = userService.getUserById(CurrentUser.id());
 
         long countTotalMembers = groupMemberService.countTotalMembers(groupId);
@@ -109,6 +110,9 @@ public class UserGroupService {
                     .existsByGroupIdAndUserIdAndStatus(
                             groupId, CurrentUser.id(), JoinRequestStatus.PENDING);
 
+        if (group.getStatus() == GroupStatus.BANNED)
+            throw new AppException(ErrorCode.GROUP_BANNED);
+
        return groupMapper.toGroupDetailResponse(group,
                user,
                countTotalMembers,
@@ -121,7 +125,7 @@ public class UserGroupService {
 
     @Transactional(readOnly = true)
     public CursorResponse<GroupResponse> getMyGroups(String keyword, Long lastId) {
-        int pageSize = 3;
+        int pageSize = 9;
 
         List<Group> groups = groupService
                 .getMyGroups(CurrentUser.id(), keyword, lastId, pageSize + 1);

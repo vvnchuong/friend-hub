@@ -1,11 +1,8 @@
 package com.friendhub.dto.request;
 
 import com.friendhub.enums.CommentPolicy;
-import jakarta.validation.constraints.NotBlank;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @AllArgsConstructor
@@ -14,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateCommentPolicyRequest {
 
-    @NotBlank(message = "Comment policy is required")
+    @NotNull(message = "Comment policy is required")
     CommentPolicy policy;
 
 }

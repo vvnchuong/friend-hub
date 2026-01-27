@@ -1,11 +1,15 @@
 package com.friendhub.controller;
 
+import com.friendhub.dto.request.PostSearchRequest;
 import com.friendhub.dto.request.UpdateCommentPolicyRequest;
 import com.friendhub.dto.response.ApiResponse;
+import com.friendhub.dto.response.PageResponse;
 import com.friendhub.dto.response.PostResponse;
 import com.friendhub.service.AdminPostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,13 +19,19 @@ public class AdminPostController {
 
     private final AdminPostService adminPostService;
 
-//    @GetMapping
-//    public ApiResponse<List<PostResponse>> getAllPosts() {
-//        return ApiResponse.<List<PostResponse>>builder()
-//                .message("Posts retrieved successfully.")
-//                .result(postService.getAllPosts())
-//                .build();
-//    }
+    @GetMapping
+    public ApiResponse<PageResponse<PostResponse>> getAllPosts(
+            @RequestParam(required = false) String keyword,
+            @PageableDefault(size = 5) Pageable pageable) {
+        PostSearchRequest request = PostSearchRequest.builder()
+                .keyword(keyword)
+                .build();
+
+        return ApiResponse.<PageResponse<PostResponse>>builder()
+                .message("Posts retrieved successfully.")
+                .result(adminPostService.getAllPosts(request, pageable))
+                .build();
+    }
 
     @GetMapping("/{postId}")
     public ApiResponse<PostResponse> getPostById(

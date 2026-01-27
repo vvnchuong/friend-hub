@@ -20,9 +20,11 @@ public enum ErrorCode {
     UNAUTHENTICATED(1001, "Unauthenticated.", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1002, "You do not have permission.", HttpStatus.FORBIDDEN),
     EMAIL_NOT_FOUND(1003, "Email not found.", HttpStatus.NOT_FOUND),
+    INVALID_RESET_TOKEN(1004, "Invalid reset password token.", HttpStatus.UNAUTHORIZED),
+    RESET_TOKEN_EXPIRED(1005, "Reset password token has expired.", HttpStatus.UNAUTHORIZED),
 
     USER_NOT_FOUND(2001, "User not found.", HttpStatus.NOT_FOUND),
-    USER_ALREADY_EXISTS(2002, "User already existed.", HttpStatus.CONFLICT),
+    USER_ALREADY_EXISTS(2002, "User already exists.", HttpStatus.CONFLICT),
     ROLE_NOT_FOUND(2003, "Role not found.", HttpStatus.NOT_FOUND),
     INVALID_OLD_PASSWORD(2004, "Invalid old password.", HttpStatus.BAD_REQUEST),
     PASSWORD_CONFIRM_MISMATCH(2005, "Password confirm mismatch.", HttpStatus.BAD_REQUEST),
@@ -31,6 +33,7 @@ public enum ErrorCode {
 
     POST_NOT_FOUND(3001, "Post not found.", HttpStatus.NOT_FOUND),
     CANNOT_SHARE_OWN_POST(3002, "You cannot share your own post.", HttpStatus.BAD_REQUEST),
+    POST_ACCESS_DENIED(3040, "You do not have access to this post.", HttpStatus.FORBIDDEN),
 
     ALREADY_FRIENDS(5001, "You are already friends.", HttpStatus.BAD_REQUEST),
     FRIEND_REQUEST_ALREADY_PENDING(5002, "Friend request is already pending.", HttpStatus.BAD_REQUEST),
@@ -56,6 +59,11 @@ public enum ErrorCode {
     INVALID_REPORT_STATE(5022, "Invalid report state", HttpStatus.BAD_REQUEST),
     CANNOT_REPORT_OWN_CONTENT(5023, "You cannot report your own content.", HttpStatus.BAD_REQUEST),
     GROUP_ALREADY_HAS_ADMIN(5024, "Group already has an admin.", HttpStatus.BAD_REQUEST),
+    COLLECTION_NOT_FOUND(5025, "Collection not found.", HttpStatus.NOT_FOUND),
+    COLLECTION_ALREADY_EXISTS(5026, "Collection already exists.", HttpStatus.CONFLICT),
+    POST_ALREADY_SAVED(5027, "Post has already been saved.", HttpStatus.CONFLICT),
+    CANNOT_SAVE_OWN_POST(5028, "You cannot save your own post.", HttpStatus.BAD_REQUEST),
+    GROUP_BANNED(5029, "This group has been banned.", HttpStatus.FORBIDDEN),
 
     FILE_EMPTY(8001, "File is empty. Please upload a file.", HttpStatus.BAD_REQUEST),
     INVALID_FILE(8002, "Invalid file.", HttpStatus.UNSUPPORTED_MEDIA_TYPE),

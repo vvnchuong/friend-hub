@@ -38,7 +38,7 @@ public class UserGroupMemberService {
     public CursorResponse<GroupMemberResponse> getAllMembers(
             long groupId, Long lastId) {
 
-        int pageSize = 1;
+        int pageSize = 10;
         List<GroupMember> groupMembers = groupMemberService
                 .getAllMembersInGroup(groupId, lastId, pageSize + 1);
 

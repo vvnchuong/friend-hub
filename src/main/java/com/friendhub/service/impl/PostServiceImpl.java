@@ -8,6 +8,9 @@ import com.friendhub.exception.AppException;
 import com.friendhub.repository.*;
 import com.friendhub.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,6 +33,11 @@ public class PostServiceImpl implements PostService {
         }
 
         return post;
+    }
+
+    @Override
+    public Page<Post> getAllPosts(Specification<Post> spec, Pageable pageable) {
+        return postRepository.findAll(spec, pageable);
     }
 
     @Override

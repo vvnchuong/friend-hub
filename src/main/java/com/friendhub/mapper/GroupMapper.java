@@ -30,6 +30,7 @@ public interface GroupMapper {
     @Mapping(target = "description", source = "group.description")
     @Mapping(target = "coverUrl", source = "group.coverUrl")
     @Mapping(target = "creator", source = "creator")
+    @Mapping(target = "status", source = "group.status")
     @Mapping(target = "createdAt", source = "group.createdAt")
     @Mapping(target = "updatedAt", source = "group.updatedAt")
     @Mapping(target = "totalMembers", source = "totalMembers")

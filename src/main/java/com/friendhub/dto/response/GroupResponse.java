@@ -1,6 +1,7 @@
 package com.friendhub.dto.response;
 
 import com.friendhub.enums.GroupPrivacy;
+import com.friendhub.enums.GroupStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class GroupResponse {
     String description;
     String coverUrl;
     UserResponse creator;
+    GroupStatus status;
     Instant createdAt;
     Instant updatedAt;
     long totalMembers;

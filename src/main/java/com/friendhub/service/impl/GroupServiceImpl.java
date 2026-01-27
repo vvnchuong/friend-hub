@@ -59,6 +59,14 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public void updateGroupStatus(long groupId, String status) {
+        if (!isExistedById(groupId))
+            throw new AppException(ErrorCode.GROUP_NOT_FOUND);
+
+        groupRepository.setGroupStatus(groupId, status);
+    }
+
+    @Override
     public boolean isExistedById(long groupId) {
         return groupRepository.existsById(groupId);
     }

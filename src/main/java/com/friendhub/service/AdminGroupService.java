@@ -2,6 +2,7 @@ package com.friendhub.service;
 
 import com.friendhub.dto.request.GroupSearchRequest;
 import com.friendhub.dto.request.GroupUpdateRequest;
+import com.friendhub.dto.request.GroupUpdateStatusRequest;
 import com.friendhub.dto.response.GroupDetailResponse;
 import com.friendhub.dto.response.GroupResponse;
 import com.friendhub.dto.response.PageResponse;
@@ -15,7 +16,9 @@ import com.friendhub.repository.specification.GroupSpecification;
 import com.friendhub.utils.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +42,16 @@ public class AdminGroupService {
             Pageable pageable) {
         Specification<Group> spec = GroupSpecification.build(request);
 
-        Page<Group> page = groupService.getAllGroups(spec, pageable);
+        Pageable sortedPageable = PageRequest
+                .of(pageable.getPageNumber(),
+                        pageable.getPageSize(),
+                        Sort.by("createdAt")
+                                .descending());
+
+        Page<Group> page = groupService.getAllGroups(spec, sortedPageable);
 
         return PageResponse.<GroupResponse>builder()
-                .content(page.getContent().stream()
+                .data(page.getContent().stream()
                         .map(group -> {
                             User creator = userService.getUserById(group.getCreatedBy());
                             long countTotalMembers = groupMemberService.countTotalMembers(group.getId());
@@ -119,6 +128,12 @@ public class AdminGroupService {
             throw new AppException(ErrorCode.GROUP_NOT_FOUND);
 
         groupService.deleteGroup(groupId);
+    }
+
+    @Transactional
+    public void updateGroupStatus(
+            long groupId, GroupUpdateStatusRequest request) {
+        groupService.updateGroupStatus(groupId, request.getStatus().name());
     }
 
 }

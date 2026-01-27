@@ -1,6 +1,7 @@
 package com.friendhub.entity;
 
 import com.friendhub.enums.GroupPrivacy;
+import com.friendhub.enums.GroupStatus;
 import com.friendhub.enums.Privacy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -31,10 +32,14 @@ public class Group {
     @Enumerated(EnumType.STRING)
     GroupPrivacy privacy;
 
+    @Enumerated(EnumType.STRING)
+    GroupStatus status;
+
     String coverUrl;
     long createdBy;
     Instant createdAt;
     Instant updatedAt;
+    Instant bannedAt;
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<GroupJoinRequest> joinRequests = new ArrayList<>();

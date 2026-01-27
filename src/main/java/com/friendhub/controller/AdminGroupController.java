@@ -2,6 +2,7 @@ package com.friendhub.controller;
 
 import com.friendhub.dto.request.GroupSearchRequest;
 import com.friendhub.dto.request.GroupUpdateRequest;
+import com.friendhub.dto.request.GroupUpdateStatusRequest;
 import com.friendhub.dto.response.ApiResponse;
 import com.friendhub.dto.response.GroupDetailResponse;
 import com.friendhub.dto.response.GroupResponse;
@@ -61,5 +62,16 @@ public class AdminGroupController {
                 .message("Group deleted successfully.")
                 .build();
     }
+
+    @PatchMapping("/{groupId}/status")
+    public ApiResponse<Void> updateGroupStatus(
+            @PathVariable("groupId") long groupId,
+            @RequestBody GroupUpdateStatusRequest request) {
+        adminGroupService.updateGroupStatus(groupId, request);
+        return ApiResponse.<Void>builder()
+                .message("Group status updated successfully.")
+                .build();
+    }
+
 
 }

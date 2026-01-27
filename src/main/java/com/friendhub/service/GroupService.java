@@ -23,6 +23,8 @@ public interface GroupService {
 
     void deleteGroup(long groupId);
 
+    void updateGroupStatus(long groupId, String status);
+
     boolean isExistedById(long groupId);
 
 }

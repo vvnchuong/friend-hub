@@ -8,6 +8,7 @@ import com.friendhub.entity.Role;
 import com.friendhub.entity.User;
 import com.friendhub.enums.ErrorCode;
 import com.friendhub.enums.UserRole;
+import com.friendhub.enums.UserStatus;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.UserMapper;
 import com.friendhub.utils.CurrentUser;
@@ -35,6 +36,7 @@ public class AccountService {
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(role);
+        user.setStatus(UserStatus.ACTIVE);
 
         return userMapper.toUserResponse(userService.createUser(user));
     }

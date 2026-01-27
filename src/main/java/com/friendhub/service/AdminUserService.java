@@ -10,6 +10,7 @@ import com.friendhub.dto.response.UserResponse;
 import com.friendhub.entity.Role;
 import com.friendhub.entity.User;
 import com.friendhub.enums.ErrorCode;
+import com.friendhub.enums.UserStatus;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.UserMapper;
 import com.friendhub.repository.specification.UserSpecification;
@@ -42,6 +43,7 @@ public class AdminUserService {
 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(role);
+        user.setStatus(UserStatus.ACTIVE);
 
         return userMapper.toUserResponse(userService.createUser(user));
     }
@@ -55,7 +57,7 @@ public class AdminUserService {
         Page<User> page = userService.getAllUsers(spec, pageable);
 
         return PageResponse.<AdminUserResponse>builder()
-                .content(page.getContent().stream()
+                .data(page.getContent().stream()
                         .map(user -> {
                             Long totalPosts = postService.countTotalPostsOfUser(user.getId());
                             Long totalFriends = userService.countAllFriendsOfUser(user.getId());

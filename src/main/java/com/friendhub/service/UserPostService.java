@@ -3,13 +3,11 @@ package com.friendhub.service;
 import com.friendhub.dto.request.PostCreationRequest;
 import com.friendhub.dto.request.PostUpdateRequest;
 import com.friendhub.dto.request.SharePostRequest;
-import com.friendhub.dto.request.UpdateCommentPolicyRequest;
 import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.PostResponse;
 import com.friendhub.entity.Post;
 import com.friendhub.entity.PostMedia;
 import com.friendhub.entity.User;
-import com.friendhub.enums.CommentPolicy;
 import com.friendhub.enums.ErrorCode;
 import com.friendhub.enums.Privacy;
 import com.friendhub.exception.AppException;
@@ -32,7 +30,6 @@ public class UserPostService {
     private final PostQueryService postQueryService;
     private final UserService userService;
     private final FriendService friendService;
-    private final GroupService groupService;
     private final PostMapper postMapper;
     private final PostMediaMapper postMediaMapper;
 
@@ -136,12 +133,27 @@ public class UserPostService {
     }
 
     @Transactional(readOnly = true)
-    // sua cai nay
-    public List<PostResponse> getAllMyFriendsAndMyPosts() {
-        return postService.getAllMyFriendsAndMyPosts(CurrentUser.id())
-                .stream()
+    public CursorResponse<PostResponse> getFeed(Long lastId) {
+        int pageSize = 10;
+
+        List<Post> posts = postService
+                .getFeed(CurrentUser.id(), lastId, pageSize + 1);
+
+        boolean hasNext = posts.size() > pageSize;
+        if (hasNext)
+            posts = posts.subList(0, pageSize);
+
+        Long nextCursor = hasNext ? posts.getLast().getId() : null;
+
+        List<PostResponse> responses = posts.stream()
                 .map(post -> postQueryService.build(post, CurrentUser.id()))
                 .toList();
+
+        return CursorResponse.<PostResponse>builder()
+                .data(responses)
+                .nextCursor(nextCursor)
+                .hasNext(hasNext)
+                .build();
     }
 
     @Transactional
@@ -170,23 +182,6 @@ public class UserPostService {
             throw new AppException(ErrorCode.UNAUTHORIZED);
 
         postService.deletePost(postId);
-    }
-
-    @Transactional
-    public void updateCommentPolicy(long postId, UpdateCommentPolicyRequest request) {
-        Post post = postService.getPostById(postId);
-
-        boolean isAuthor = Objects.equals(post.getUser().getId(), CurrentUser.id());
-
-        if (!isAuthor)
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-
-        if (post.getCommentPolicy() == CommentPolicy.DISABLED)
-            throw new AppException(ErrorCode.COMMENT_DISABLED_BY_ADMIN);
-
-        post.setCommentPolicy(request.getPolicy());
-
-        postService.updateCommentPolicy(post);
     }
 
     @Transactional

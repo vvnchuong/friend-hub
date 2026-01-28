@@ -66,7 +66,7 @@ public class AdminGroupController {
     @PatchMapping("/{groupId}/status")
     public ApiResponse<Void> updateGroupStatus(
             @PathVariable("groupId") long groupId,
-            @RequestBody GroupUpdateStatusRequest request) {
+            @RequestBody @Valid GroupUpdateStatusRequest request) {
         adminGroupService.updateGroupStatus(groupId, request);
         return ApiResponse.<Void>builder()
                 .message("Group status updated successfully.")

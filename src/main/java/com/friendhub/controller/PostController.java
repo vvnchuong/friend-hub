@@ -3,7 +3,6 @@ package com.friendhub.controller;
 import com.friendhub.dto.request.PostCreationRequest;
 import com.friendhub.dto.request.PostUpdateRequest;
 import com.friendhub.dto.request.SharePostRequest;
-import com.friendhub.dto.request.UpdateCommentPolicyRequest;
 import com.friendhub.dto.response.ApiResponse;
 import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.PostResponse;
@@ -11,8 +10,6 @@ import com.friendhub.service.UserPostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -59,10 +56,11 @@ public class PostController {
     }
 
     @GetMapping("/friends")
-    public ApiResponse<List<PostResponse>> getAllFriendAndMyPosts() {
-        return ApiResponse.<List<PostResponse>>builder()
+    public ApiResponse<CursorResponse<PostResponse>> getFeed(
+            @RequestParam(required = false) Long lastId) {
+        return ApiResponse.<CursorResponse<PostResponse>>builder()
                 .message("Post retrieved successfully.")
-                .result(userPostService.getAllMyFriendsAndMyPosts())
+                .result(userPostService.getFeed(lastId))
                 .build();
     }
 
@@ -73,16 +71,6 @@ public class PostController {
         return ApiResponse.<PostResponse>builder()
                 .message("Post updated successfully.")
                 .result(userPostService.updatePost(postId, request))
-                .build();
-    }
-
-    @PatchMapping("/{postId}/comment-policy")
-    public ApiResponse<Void> updateMyPostCommentPolicy(
-            @PathVariable("postId") long postId,
-            @RequestBody @Valid UpdateCommentPolicyRequest request) {
-        userPostService.updateCommentPolicy(postId, request);
-        return ApiResponse.<Void>builder()
-                .message("")
                 .build();
     }
 

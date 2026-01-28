@@ -23,7 +23,7 @@ public interface PostService {
 
     List<Post> getPostsOfUser(long userId, Long lastId, long limit);
 
-    List<Post> getAllMyFriendsAndMyPosts(long userId);
+    List<Post> getFeed(long userId, Long lastId, int limit);
 
     void updatePost(Post post);
 

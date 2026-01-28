@@ -57,16 +57,14 @@ public class PostServiceImpl implements PostService {
                 .findAllMyPosts(userId, lastId, limit);
     }
 
-    // get all posts in profile of a user
     public List<Post> getPostsOfUser(long userId, Long lastId, long limit) {
         return postRepository
                 .findAllPostsOfUser(userId, lastId, limit);
     }
 
-    // get all my posts and my friends posts
     @Override
-    public List<Post> getAllMyFriendsAndMyPosts(long userId) {
-        return postRepository.findAllFriendAndMyPosts(userId);
+    public List<Post> getFeed(long userId, Long lastId, int limit) {
+        return postRepository.findFeed(userId, lastId, limit);
     }
 
     @Override

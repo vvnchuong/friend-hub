@@ -46,13 +46,16 @@ public interface PostRepository extends JpaRepository<Post, Long>,
             "ON ( f.status = 'ACCEPTED' " +
             "AND f.user_low_id = LEAST(:userId, p.user_id) " +
             "AND f.user_high_id = GREATEST(:userId, p.user_id)) " +
-            "WHERE (p.user_id = :userId " +
-            "OR f.id IS NOT NULL) " +
+            "WHERE (p.user_id = :userId OR f.id IS NOT NULL) " +
+            "AND (:lastId IS NULL OR p.id < :lastId) " +
             "AND (p.user_id = :userId " +
             "OR p.privacy IN ('PUBLIC', 'FRIEND')) " +
             "AND p.group_id IS NULL " +
-            "ORDER BY p.created_at DESC", nativeQuery = true)
-    List<Post> findAllFriendAndMyPosts(@Param("userId") Long userId);
+            "ORDER BY p.created_at DESC " +
+            "LIMIT :limit", nativeQuery = true)
+    List<Post> findFeed(@Param("userId") long userId,
+                        @Param("lastId") Long lastId,
+                        @Param("limit") int limit);
 
     @Query(value = "SELECT p.* " +
             "FROM posts p " +

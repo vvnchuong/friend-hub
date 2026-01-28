@@ -3,7 +3,7 @@ package com.friendhub.controller;
 import com.friendhub.dto.request.AdminUserCreationRequest;
 import com.friendhub.dto.request.AdminUserSearchRequest;
 import com.friendhub.dto.request.AdminUserUpdateRequest;
-import com.friendhub.dto.request.BanUserRequest;
+import com.friendhub.dto.request.UserUpdateStatusRequest;
 import com.friendhub.dto.response.AdminUserResponse;
 import com.friendhub.dto.response.ApiResponse;
 import com.friendhub.dto.response.PageResponse;
@@ -79,24 +79,14 @@ public class AdminUserController {
                 .build();
     }
 
-    @PostMapping("/{userId}/ban")
-    public ApiResponse<Void> banUser(
+    @PatchMapping("/{userId}/ban")
+    public ApiResponse<Void> updateUserStatus(
             @PathVariable("userId") long userId,
-            @RequestBody @Valid BanUserRequest request) {
-        adminUserService.banUser(userId, request);
+            @RequestBody @Valid UserUpdateStatusRequest request) {
+        adminUserService.updateUserStatus(userId, request);
         return ApiResponse.<Void>builder()
-                .message("User banned successfully.")
+                .message("User status updated successfully.")
                 .build();
     }
-
-    @PostMapping("/{userId}/unban")
-    public ApiResponse<Void> unBanUser(
-            @PathVariable("userId") long userId) {
-        adminUserService.unBanUser(userId);
-        return ApiResponse.<Void>builder()
-                .message("User unbanned successfully.")
-                .build();
-    }
-
 
 }

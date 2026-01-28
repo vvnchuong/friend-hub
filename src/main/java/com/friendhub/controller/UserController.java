@@ -1,5 +1,6 @@
 package com.friendhub.controller;
 
+import com.friendhub.dto.request.UserUpdateStatusRequest;
 import com.friendhub.dto.request.ChangePasswordRequest;
 import com.friendhub.dto.response.ApiResponse;
 import com.friendhub.dto.request.UserCreationRequest;
@@ -54,21 +55,13 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping("/{userId}/lock")
-    public ApiResponse<Void> lockAccount() {
-        accountService.lockAccount();
+    @PatchMapping("/{userId}/ban")
+    public ApiResponse<Void> updateUserStatus(
+            @RequestBody @Valid UserUpdateStatusRequest request) {
+        accountService.updateUserStatus(request);
         return ApiResponse.<Void>builder()
-                .message("User looked successfully.")
+                .message("User status updated successfully.")
                 .build();
     }
-
-    @PostMapping("/{userId}/unlock")
-    public ApiResponse<Void> unlockAccount() {
-        accountService.unLockAccount();
-        return ApiResponse.<Void>builder()
-                .message("User unlocked successfully.")
-                .build();
-    }
-
 
 }

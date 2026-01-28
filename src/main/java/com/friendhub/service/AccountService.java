@@ -1,5 +1,6 @@
 package com.friendhub.service;
 
+import com.friendhub.dto.request.UserUpdateStatusRequest;
 import com.friendhub.dto.request.ChangePasswordRequest;
 import com.friendhub.dto.request.UserCreationRequest;
 import com.friendhub.dto.request.UserUpdateRequest;
@@ -75,13 +76,8 @@ public class AccountService {
     }
 
     @Transactional
-    public void lockAccount() {
-        userService.lockAccount(CurrentUser.id());
-    }
-
-    @Transactional
-    public void unLockAccount() {
-        userService.unLockAccount(CurrentUser.id());
+    public void updateUserStatus(UserUpdateStatusRequest request) {
+        userService.updateStatusUser(CurrentUser.id(), request.getStatus().name());
     }
 
 }

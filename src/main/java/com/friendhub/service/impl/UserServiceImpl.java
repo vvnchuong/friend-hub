@@ -51,35 +51,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void banUser(long userId, String reason, long handler) {
+    public void updateStatusUser(long userId, String status) {
         if (!isExistedById(userId))
             throw new AppException(ErrorCode.USER_NOT_FOUND);
 
-        userRepository.banUser(userId, reason, handler);
-    }
-
-    @Override
-    public void unBanUser(long userId) {
-        if (!isExistedById(userId))
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-
-        userRepository.unBanUser(userId);
-    }
-
-    @Override
-    public void lockAccount(long currentUserId) {
-        if (!isExistedById(currentUserId))
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-
-        userRepository.lockAccount(currentUserId);
-    }
-
-    @Override
-    public void unLockAccount(long currentUserId) {
-        if (!isExistedById(currentUserId))
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-
-        userRepository.unLockAccount(currentUserId);
+        userRepository.setUserStatus(userId, status);
     }
 
     @Override

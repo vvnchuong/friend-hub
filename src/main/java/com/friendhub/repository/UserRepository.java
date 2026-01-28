@@ -37,34 +37,10 @@ public interface UserRepository extends JpaRepository<User, Long>,
 
     @Modifying
     @Query(value = "UPDATE users " +
-            "SET status = 'LOOKED' " +
-            "WHERE id = :userId", nativeQuery = true)
-    void lockAccount(@Param("userId") long userId);
-
-    @Modifying
-    @Query(value = "UPDATE users " +
-            "SET status = 'ACTIVE' " +
-            "WHERE id = :userId", nativeQuery = true)
-    void unLockAccount(@Param("userId") long userId);
-
-    @Modifying
-    @Query(value = "UPDATE users " +
-            "SET status = 'BANNED'," +
-            "banned_reason = :reason," +
-            "banned_by = :banner, " +
+            "SET status = :status, " +
             "banned_at = NOW() " +
             "WHERE id = :userId", nativeQuery = true)
-    void banUser(@Param("userId") long userId,
-                 @Param("reason") String reason,
-                 @Param("banner") long banner);
-
-    @Modifying
-    @Query(value = "UPDATE users " +
-            "SET status = 'ACTIVE', " +
-            "banned_reason = NULL, " +
-            "banned_by = NULL, " +
-            "banned_at = NULL " +
-            "WHERE id = :userId", nativeQuery = true)
-    void unBanUser(@Param("userId") long userId);
+    void setUserStatus(@Param("userId") long userId,
+                       @Param("status") String status);
 
 }

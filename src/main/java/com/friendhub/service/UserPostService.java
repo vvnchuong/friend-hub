@@ -77,7 +77,7 @@ public class UserPostService {
 
     @Transactional(readOnly = true)
     public CursorResponse<PostResponse> getMyPosts(Long lastId) {
-        int pageSize = 2;
+        int pageSize = 10;
 
         List<Post> posts = postService
                 .getMyPosts(CurrentUser.id(), lastId, pageSize + 1);
@@ -104,7 +104,7 @@ public class UserPostService {
             long userId, Long lastId) {
         boolean isSelf = CurrentUser.id() == userId;
         boolean areFriends = friendService.areFriends(CurrentUser.id(), userId);
-        int pageSize = 2;
+        int pageSize = 10;
 
         List<Post> posts = postService
                 .getPostsOfUser(userId, lastId, pageSize + 1);

@@ -17,13 +17,7 @@ public interface UserService {
 
     void changePassword(User user, String encodedPassword);
 
-    void banUser(long userId, String reason, long handler);
-
-    void unBanUser(long userId);
-
-    void lockAccount(long currentUserId);
-
-    void unLockAccount(long currentUserId);
+    void updateStatusUser(long userId, String status);
 
     void assertActive(User user);
 

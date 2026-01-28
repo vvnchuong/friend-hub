@@ -3,7 +3,7 @@ package com.friendhub.service;
 import com.friendhub.dto.request.AdminUserCreationRequest;
 import com.friendhub.dto.request.AdminUserSearchRequest;
 import com.friendhub.dto.request.AdminUserUpdateRequest;
-import com.friendhub.dto.request.BanUserRequest;
+import com.friendhub.dto.request.UserUpdateStatusRequest;
 import com.friendhub.dto.response.AdminUserResponse;
 import com.friendhub.dto.response.PageResponse;
 import com.friendhub.dto.response.UserResponse;
@@ -14,7 +14,6 @@ import com.friendhub.enums.UserStatus;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.UserMapper;
 import com.friendhub.repository.specification.UserSpecification;
-import com.friendhub.utils.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -102,13 +101,8 @@ public class AdminUserService {
     }
 
     @Transactional
-    public void banUser(long userId, BanUserRequest request) {
-        userService.banUser(userId, request.getReason(), CurrentUser.id());
-    }
-
-    @Transactional
-    public void unBanUser(long userId) {
-        userService.unBanUser(userId);
+    public void updateUserStatus(long userId, UserUpdateStatusRequest request) {
+        userService.updateStatusUser(userId, request.getStatus().name());
     }
 
 }

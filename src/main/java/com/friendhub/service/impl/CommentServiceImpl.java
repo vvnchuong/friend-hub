@@ -46,8 +46,9 @@ public class CommentServiceImpl implements CommentService {
         comment.setPost(post);
         comment.setUser(user);
 
-        notificationService
-                .createCommentNotification(user, post.getUser(), post);
+        if (!(user.getId() == post.getUser().getId()))
+            notificationService
+                    .createCommentNotification(user, post.getUser(), post);
 
         return commentMapper
                 .toCommentResponse(commentRepository.save(comment));

@@ -53,10 +53,9 @@ public class PostLikeServiceImpl implements PostLikeService {
             isLiked = true;
             postLikeRepository.save(postLike);
 
-            if (!(user.getId() == post.getUser().getId())) {
+            if (!(user.getId() == post.getUser().getId()))
                 notificationService.createLikeNotification(
                         user, post.getUser(), post);
-            }
         }
 
         int totalLikes = postLikeRepository.countByPostId(postId);

@@ -49,13 +49,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     UserStatus status;
-    String bannedReason;
     Instant bannedAt;
-
-    @ManyToOne
-    @JoinColumn(name = "banned_by")
-    @JsonIgnore
-    User bannedBy;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
@@ -85,5 +79,14 @@ public class User {
 
     @OneToMany(mappedBy = "receiver")
     List<Notification> notificationsReceiver = new ArrayList<>();
+
+    @OneToMany(mappedBy = "reporter")
+    List<Report> reporterReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "handledBy")
+    List<Report> handlerReports = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    List<Collection> collections = new ArrayList<>();
 
 }

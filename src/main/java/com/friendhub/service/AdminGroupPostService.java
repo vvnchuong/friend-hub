@@ -8,11 +8,10 @@ import com.friendhub.enums.ErrorCode;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.PostMapper;
 import com.friendhub.utils.CurrentUser;
+import com.friendhub.utils.CursorPaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -26,26 +25,17 @@ public class AdminGroupPostService {
 
     @Transactional(readOnly = true)
     public CursorResponse<PostResponse> getAllPosts(long groupId, Long lastId) {
-        int pageSize = 2;
+        int pageSize = 10;
 
-        List<Post> posts = groupPostService
-                .getAllPosts(groupId, lastId, pageSize + 1);
-
-        boolean hasNext = posts.size() > pageSize;
-        if (hasNext)
-            posts = posts.subList(0, pageSize);
-
-        Long nextCursor = hasNext ? posts.getLast().getId() : null;
-
-        List<PostResponse> responses = posts.stream()
-                .map(post -> postQueryService.build(post, CurrentUser.id()))
-                .toList();
-
-        return CursorResponse.<PostResponse>builder()
-                .data(responses)
-                .nextCursor(nextCursor)
-                .hasNext(hasNext)
-                .build();
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () -> groupPostService
+                        .getAllPosts(groupId, lastId, pageSize + 1),
+                Post::getId,
+                p -> p.stream()
+                        .map(post -> postQueryService.build(post, CurrentUser.id()))
+                        .toList()
+        );
     }
 
     @Transactional(readOnly = true)

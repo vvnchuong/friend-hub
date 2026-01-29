@@ -14,30 +14,42 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     boolean existsByUserLowIdAndUserHighIdAndStatus(
             long userLowId,
             long userHighId,
-            FriendStatus status
-    );
+            FriendStatus status);
 
-    @Query("""
-    SELECT f
-    FROM Friend f
-    WHERE f.status = :status
-      AND (f.userLow.id = :userId OR f.userHigh.id = :userId)
-""")
-    List<Friend> findFriends(
-            @Param("userId") long userId,
-            @Param("status") FriendStatus status
-    );
+    @Query(value = "SELECT f.* " +
+            "FROM friends f " +
+            "JOIN users u " +
+            "ON u.id = IF (f.user_low_id = :userId, " +
+            " f.user_high_id, " +
+            "f.user_low_id) " +
+            "AND u.status = 'ACTIVE' " +
+            "WHERE (:lastId  IS NULL OR f.id < :lastId) " +
+            "AND f.status = :status " +
+            "AND (f.user_low_id = :userId OR f.user_high_id = :userId) " +
+            "ORDER BY created_at DESC " +
+            "LIMIT :limit", nativeQuery = true)
+    List<Friend> findFriends(@Param("userId") long userId,
+                             @Param("status") String status,
+                             @Param("lastId") Long lastId,
+                             @Param("limit") int limit);
 
-    @Query("""
-    SELECT f
-    FROM Friend f
-    WHERE f.status = 'PENDING'
-      AND f.requester.id <> :userId
-      AND (f.userLow.id = :userId OR f.userHigh.id = :userId)
-""")
-    List<Friend> findPendingRequests(@Param("userId") long userId);
+    @Query(value = "SELECT f.* " +
+            "FROM friends f " +
+            "JOIN users u " +
+            "ON u.id = IF (f.user_low_id = :userId, " +
+            " f.user_high_id, " +
+            "f.user_low_id) " +
+            "AND u.status = 'ACTIVE' " +
+            "WHERE (:lastId  IS NULL OR f.id < :lastId) " +
+            "AND f.status = 'PENDING' " +
+            "AND f.requester_id <> :userId " +
+            "AND (f.user_low_id = :userId OR f.user_high_id = :userId) " +
+            "ORDER BY created_at DESC " +
+            "LIMIT :limit", nativeQuery = true)
+    List<Friend> findPendingRequests(@Param("userId") long userId,
+                                     @Param("lastId") Long lastId,
+                                     @Param("limit") int limit);
 
     Optional<Friend> findByUserLowIdAndUserHighId(long lowId, long highId);
-
 
 }

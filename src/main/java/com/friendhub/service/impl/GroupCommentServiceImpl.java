@@ -2,6 +2,7 @@ package com.friendhub.service.impl;
 
 import com.friendhub.dto.request.CommentCreationRequest;
 import com.friendhub.dto.response.CommentResponse;
+import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.entity.Comment;
 import com.friendhub.entity.Post;
 import com.friendhub.entity.User;
@@ -11,10 +12,10 @@ import com.friendhub.mapper.CommentMapper;
 import com.friendhub.repository.CommentRepository;
 import com.friendhub.service.*;
 import com.friendhub.utils.CurrentUser;
+import com.friendhub.utils.CursorPaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class GroupCommentServiceImpl implements GroupCommentService {
     private final CommentMapper commentMapper;
 
     @Override
+    @Transactional
     public CommentResponse createCommentInGroup(long groupId, long postId, CommentCreationRequest request) {
         Post post = getPostInGroup(groupId, postId);
         User user = userService.getUserById(CurrentUser.id());
@@ -45,11 +47,21 @@ public class GroupCommentServiceImpl implements GroupCommentService {
     }
 
     @Override
-    public List<CommentResponse> getAllCommentsByGroupIdAndPostId(long groupId, long postId) {
+    @Transactional(readOnly = true)
+    public CursorResponse<CommentResponse> getCommentsGroup(long groupId, long postId, Long lastId) {
         Post post = getPostInGroup(groupId, postId);
 
-        return commentRepository.findAllByPostId(post.getId()).stream()
-                .map(commentMapper::toCommentResponse).toList();
+        int pageSize = 10;
+
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () -> commentRepository
+                        .findCommentsPost(post.getId(), lastId, pageSize + 1),
+                Comment::getId,
+                c -> c.stream()
+                        .map(commentMapper::toCommentResponse)
+                        .toList()
+        );
     }
 
     private Post getPostInGroup(long groupId, long postId) {

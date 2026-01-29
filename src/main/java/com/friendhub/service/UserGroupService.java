@@ -14,12 +14,12 @@ import com.friendhub.exception.AppException;
 import com.friendhub.mapper.GroupMapper;
 import com.friendhub.repository.GroupJoinRequestRepository;
 import com.friendhub.utils.CurrentUser;
+import com.friendhub.utils.CursorPaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -59,28 +59,16 @@ public class UserGroupService {
             String keyword, Long lastId) {
         int pageSize = 9;
 
-        List<Group> groups = groupService
-                .getSuggestedGroups(
-                        CurrentUser.id(), keyword, lastId, pageSize + 1);
-
-        boolean hasNext = groups.size() > pageSize;
-
-        if (hasNext)
-            groups = groups.subList(0, pageSize);
-
-        Long nextCursor = hasNext
-                ? groups.getLast().getId()
-                : null;
-
-        List<GroupResponse> responses = groups.stream()
-                .map(this::mapToGroupResponse)
-                .toList();
-
-        return CursorResponse.<GroupResponse>builder()
-                .data(responses)
-                .nextCursor(nextCursor)
-                .hasNext(hasNext)
-                .build();
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () -> groupService
+                        .getSuggestedGroups(
+                                CurrentUser.id(), keyword, lastId, pageSize + 1),
+                Group::getId,
+                g -> g.stream()
+                        .map(this::mapToGroupResponse)
+                        .toList()
+        );
     }
 
     @Transactional(readOnly = true)
@@ -127,24 +115,15 @@ public class UserGroupService {
     public CursorResponse<GroupResponse> getMyGroups(String keyword, Long lastId) {
         int pageSize = 9;
 
-        List<Group> groups = groupService
-                .getMyGroups(CurrentUser.id(), keyword, lastId, pageSize + 1);
-
-        boolean hasNext = groups.size() > pageSize;
-        if (hasNext)
-            groups = groups.subList(0, pageSize);
-
-        Long nextCursor = hasNext ? groups.getLast().getId() : null;
-
-        List<GroupResponse> responses = groups.stream()
-                .map(this::mapToGroupResponse)
-                .toList();
-
-        return CursorResponse.<GroupResponse>builder()
-                .data(responses)
-                .nextCursor(nextCursor)
-                .hasNext(hasNext)
-                .build();
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () -> groupService
+                        .getMyGroups(CurrentUser.id(), keyword, lastId, pageSize + 1),
+                Group::getId,
+                g -> g.stream()
+                        .map(this::mapToGroupResponse)
+                        .toList()
+        );
     }
 
     @Transactional

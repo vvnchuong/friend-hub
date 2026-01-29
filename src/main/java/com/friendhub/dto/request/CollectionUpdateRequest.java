@@ -11,9 +11,9 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BanUserRequest {
+public class CollectionUpdateRequest {
 
-    @NotBlank(message = "reason is required")
-    String reason;
+    @NotBlank(message = "Name is required")
+    String name;
 
 }

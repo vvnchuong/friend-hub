@@ -14,6 +14,7 @@ import com.friendhub.exception.AppException;
 import com.friendhub.mapper.PostMapper;
 import com.friendhub.mapper.PostMediaMapper;
 import com.friendhub.utils.CurrentUser;
+import com.friendhub.utils.CursorPaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,24 +77,16 @@ public class UserPostService {
     public CursorResponse<PostResponse> getMyPosts(Long lastId) {
         int pageSize = 10;
 
-        List<Post> posts = postService
-                .getMyPosts(CurrentUser.id(), lastId, pageSize + 1);
-
-        boolean hasNext = posts.size() > pageSize;
-        if (hasNext)
-            posts = posts.subList(0, pageSize);
-
-        Long nextCursor = hasNext ? posts.getLast().getId() : null;
-
-        List<PostResponse> responses = posts.stream()
-                .map(post -> postQueryService.build(post, CurrentUser.id()))
-                .toList();
-
-        return CursorResponse.<PostResponse>builder()
-                .data(responses)
-                .nextCursor(nextCursor)
-                .hasNext(hasNext)
-                .build();
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () -> postService
+                        .getMyPosts(CurrentUser.id(), lastId, pageSize + 1),
+                Post::getId,
+                p -> p.stream()
+                        .map(post -> postQueryService
+                                .build(post, CurrentUser.id()))
+                        .toList()
+        );
     }
 
     @Transactional(readOnly = true)
@@ -103,57 +96,39 @@ public class UserPostService {
         boolean areFriends = friendService.areFriends(CurrentUser.id(), userId);
         int pageSize = 10;
 
-        List<Post> posts = postService
-                .getPostsOfUser(userId, lastId, pageSize + 1);
-
-        boolean hasNext = posts.size() > pageSize;
-        if (hasNext)
-            posts = posts.subList(0, pageSize);
-
-        Long nextCursor = hasNext ? posts.getLast().getId() : null;
-
-        List<PostResponse> responses = posts.stream()
-                .filter(post -> {
-                    if (isSelf)
-                        return true;
-                    return switch (post.getPrivacy()) {
-                        case PUBLIC -> true;
-                        case FRIEND -> areFriends;
-                        case PRIVATE -> false;
-                    };
-                })
-                .map(post -> postQueryService.build(post, CurrentUser.id()))
-                .toList();
-
-        return CursorResponse.<PostResponse>builder()
-                .data(responses)
-                .nextCursor(nextCursor)
-                .hasNext(hasNext)
-                .build();
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () -> postService
+                        .getPostsOfUser(userId, lastId, pageSize + 1),
+                Post::getId,
+                p -> p.stream()
+                        .filter(post -> {
+                            if (isSelf)
+                                return true;
+                            return switch (post.getPrivacy()) {
+                                case PUBLIC -> true;
+                                case FRIEND -> areFriends;
+                                case PRIVATE -> false;
+                            };
+                        })
+                        .map(post -> postQueryService.build(post, CurrentUser.id()))
+                        .toList()
+        );
     }
 
     @Transactional(readOnly = true)
     public CursorResponse<PostResponse> getFeed(Long lastId) {
         int pageSize = 10;
 
-        List<Post> posts = postService
-                .getFeed(CurrentUser.id(), lastId, pageSize + 1);
-
-        boolean hasNext = posts.size() > pageSize;
-        if (hasNext)
-            posts = posts.subList(0, pageSize);
-
-        Long nextCursor = hasNext ? posts.getLast().getId() : null;
-
-        List<PostResponse> responses = posts.stream()
-                .map(post -> postQueryService.build(post, CurrentUser.id()))
-                .toList();
-
-        return CursorResponse.<PostResponse>builder()
-                .data(responses)
-                .nextCursor(nextCursor)
-                .hasNext(hasNext)
-                .build();
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () -> postService
+                        .getFeed(CurrentUser.id(), lastId, pageSize + 1),
+                Post::getId,
+                p -> p.stream()
+                        .map(post -> postQueryService.build(post, CurrentUser.id()))
+                        .toList()
+        );
     }
 
     @Transactional

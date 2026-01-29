@@ -4,9 +4,8 @@ import com.friendhub.dto.request.FriendAcceptRequest;
 import com.friendhub.dto.request.FriendRejectRequest;
 import com.friendhub.dto.request.FriendCreationRequest;
 import com.friendhub.dto.request.UnFriendRequest;
+import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.FriendResponse;
-
-import java.util.List;
 
 public interface FriendService {
 
@@ -18,11 +17,11 @@ public interface FriendService {
 
     void unFriend(UnFriendRequest request);
 
-    List<FriendResponse> getAllFriendsByUser();
+    CursorResponse<FriendResponse> getAllFriends(Long lastId);
 
-    List<FriendResponse> getAllFriendRequestsByUser();
+    CursorResponse<FriendResponse> getAllFriendRequests(Long lastId);
 
-    List<FriendResponse> getAllPotentialFriends();
+    CursorResponse<FriendResponse> getAllPotentialFriends(Long lastId);
 
     boolean areFriends(long userId1, long userId2);
 

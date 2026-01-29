@@ -38,10 +38,11 @@ public interface PostRepository extends JpaRepository<Post, Long>,
                               @Param("lastId") Long lastId,
                               @Param("limit") int limit);
 
-    Long countByGroupId(long groupId);
-
     @Query(value = "SELECT DISTINCT p.* " +
             "FROM posts p " +
+            "JOIN users u " +
+            "ON u.id = p.user_id " +
+            "AND u.status = 'ACTIVE' " +
             "LEFT JOIN friends f " +
             "ON ( f.status = 'ACCEPTED' " +
             "AND f.user_low_id = LEAST(:userId, p.user_id) " +
@@ -59,6 +60,9 @@ public interface PostRepository extends JpaRepository<Post, Long>,
 
     @Query(value = "SELECT p.* " +
             "FROM posts p " +
+            "JOIN users u " +
+            "ON u.id = p.user_id " +
+            "AND u.status = 'ACTIVE' " +
             "JOIN groups g " +
             "ON p.group_id = g.id " +
             "JOIN users u " +
@@ -75,5 +79,7 @@ public interface PostRepository extends JpaRepository<Post, Long>,
     Optional<Post> findByIdAndGroupId(long postId, long groupId);
 
     Long countByUserId(long userId);
+
+    Long countByGroupId(long groupId);
 
 }

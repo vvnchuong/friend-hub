@@ -9,6 +9,7 @@ import com.friendhub.entity.Post;
 import com.friendhub.enums.JoinRequestStatus;
 import com.friendhub.mapper.GroupMemberMapper;
 import com.friendhub.repository.GroupJoinRequestRepository;
+import com.friendhub.utils.CursorPaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,26 +28,17 @@ public class AdminGroupMemberService {
     @Transactional(readOnly = true)
     public CursorResponse<GroupMemberResponse> getAllMembers(
             long groupId, Long lastId) {
-
         int pageSize = 10;
-        List<GroupMember> groupMembers = groupMemberService
-                .getAllMembersInGroup(groupId, lastId, pageSize + 1);
 
-        boolean hasNext = groupMembers.size() > pageSize;
-        if (hasNext)
-            groupMembers = groupMembers.subList(0, pageSize);
-
-        Long nextCursor = hasNext ? groupMembers.getLast().getUser().getId() : null;
-
-        List<GroupMemberResponse> responses = groupMembers.stream()
-                .map(groupMemberMapper::toGroupMemberResponse)
-                .toList();
-
-        return CursorResponse.<GroupMemberResponse>builder()
-                .data(responses)
-                .nextCursor(nextCursor)
-                .hasNext(hasNext)
-                .build();
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () ->  groupMemberService
+                        .getAllMembersInGroup(groupId, lastId, pageSize + 1),
+                gm -> gm.getUser().getId(),
+                gm -> gm.stream()
+                        .map(groupMemberMapper::toGroupMemberResponse)
+                        .toList()
+        );
     }
 
     @Transactional
@@ -69,8 +61,6 @@ public class AdminGroupMemberService {
 
         List<Post> posts = postService.getPostByUserAndGroup(memberId, groupId);
         postService.deleteAllPosts(posts);
-
-        // remove all notifications and reports
 
         groupMemberService.deleteMember(member);
     }

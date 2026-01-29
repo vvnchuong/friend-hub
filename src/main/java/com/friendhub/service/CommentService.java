@@ -1,14 +1,16 @@
 package com.friendhub.service;
 
 import com.friendhub.dto.request.CommentCreationRequest;
+import com.friendhub.dto.request.UpdateCommentPolicyRequest;
 import com.friendhub.dto.response.CommentResponse;
-
-import java.util.List;
+import com.friendhub.dto.response.CursorResponse;
 
 public interface CommentService {
 
     CommentResponse createComment(long postId, CommentCreationRequest request);
 
-    List<CommentResponse> getAllCommentsByPostId(long postId);
+    CursorResponse<CommentResponse> getAllCommentsPost(long postId, Long lastId);
+
+    void updateCommentPolicy(long postId, UpdateCommentPolicyRequest request);
 
 }

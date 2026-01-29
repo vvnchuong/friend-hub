@@ -20,14 +20,21 @@ public interface UserRepository extends JpaRepository<User, Long>,
     Optional<User> findByEmail(String email);
 
     @Query(value = "SELECT * " +
-        "FROM users u " +
-        "WHERE u.id <> :userId " +
-        "AND NOT EXISTS (" +
-        "SELECT 1 " +
-        "FROM friends f " +
-        "WHERE ((f.user_low_id = :userId AND f.user_high_id = u.id) " +
-        "OR (f.user_high_id = :userId AND f.user_low_id = u.id)))", nativeQuery = true)
-    List<User> findAllPotentialFriends(long userId);
+            "FROM users u " +
+            "WHERE u.id <> :userId " +
+            "AND (:lastId IS NULL OR u.id < :lastId) " +
+            "AND u.role_id <> 1 " +
+            "AND u.status = 'ACTIVE' " +
+            "AND NOT EXISTS (" +
+            "SELECT 1 " +
+            "FROM friends f " +
+            "WHERE ((f.user_low_id = :userId AND f.user_high_id = u.id) " +
+            "OR (f.user_high_id = :userId AND f.user_low_id = u.id))) " +
+            "ORDER BY u.id DESC " +
+            "LIMIT :limit", nativeQuery = true)
+    List<User> findAllPotentialFriends(@Param("userId") long userId,
+                                       @Param("lastId") Long lastId,
+                                       @Param("limit") int limit);
 
     @Query(value = "SELECT COUNT(*) " +
             "FROM friends " +

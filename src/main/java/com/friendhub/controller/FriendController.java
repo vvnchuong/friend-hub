@@ -5,12 +5,12 @@ import com.friendhub.dto.request.FriendRejectRequest;
 import com.friendhub.dto.request.FriendCreationRequest;
 import com.friendhub.dto.request.UnFriendRequest;
 import com.friendhub.dto.response.ApiResponse;
+import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.FriendResponse;
 import com.friendhub.service.FriendService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,62 +20,65 @@ public class FriendController {
     private final FriendService friendService;
 
     @PostMapping("/requests")
-    public ApiResponse<String> addFriend(@RequestBody FriendCreationRequest request) {
+    public ApiResponse<String> addFriend(
+            @RequestBody @Valid FriendCreationRequest request) {
         friendService.addFriendRequest(request);
-
         return ApiResponse.<String>builder()
                 .message("Friend request sent successfully.")
                 .build();
     }
 
     @PostMapping("/accept")
-    public ApiResponse<String> acceptFriendRequest(@RequestBody FriendAcceptRequest request) {
+    public ApiResponse<String> acceptFriendRequest(
+            @RequestBody @Valid FriendAcceptRequest request) {
         friendService.acceptFriendRequest(request);
-
         return ApiResponse.<String>builder()
                 .message("Friend request accepted successfully.")
                 .build();
     }
 
     @PostMapping("/reject")
-    public ApiResponse<String> rejectFriendRequest(@RequestBody FriendRejectRequest request) {
+    public ApiResponse<String> rejectFriendRequest(
+            @RequestBody @Valid FriendRejectRequest request) {
         friendService.rejectFriendRequest(request);
-
         return ApiResponse.<String>builder()
                 .message("Friend request canceled successfully.")
                 .build();
     }
 
     @PostMapping("/unfriend")
-    public ApiResponse<String> unFriend(@RequestBody UnFriendRequest request) {
+    public ApiResponse<String> unFriend(
+            @RequestBody @Valid UnFriendRequest request) {
         friendService.unFriend(request);
-
         return ApiResponse.<String>builder()
-                .message("Unfriended successfully.")
+                .message("User unfriended successfully.")
                 .build();
     }
 
     @GetMapping
-    public ApiResponse<List<FriendResponse>> getAllFriendsByUser() {
-        return ApiResponse.<List<FriendResponse>>builder()
-                .result(friendService.getAllFriendsByUser())
+    public ApiResponse<CursorResponse<FriendResponse>> getAllFriendsByUser(
+            @RequestParam(required = false) Long lastId) {
+        return ApiResponse.<CursorResponse<FriendResponse>>builder()
+                .result(friendService.getAllFriends(lastId))
                 .message("Friend request canceled successfully.")
                 .build();
     }
 
     @GetMapping("/requests")
-    public ApiResponse<List<FriendResponse>> getAllFriendRequests() {
-        return ApiResponse.<List<FriendResponse>>builder()
+    public ApiResponse<CursorResponse<FriendResponse>> getAllFriendRequests(
+            @RequestParam(required = false) Long lastId) {
+        return ApiResponse.<CursorResponse<FriendResponse>>builder()
                 .message("Friends retrieved successfully.")
-                .result(friendService.getAllFriendRequestsByUser())
+                .result(friendService.getAllFriendRequests(lastId))
                 .build();
     }
 
     @GetMapping("/potential")
-    public ApiResponse<List<FriendResponse>> getAllPotentialFriends() {
-        return ApiResponse.<List<FriendResponse>>builder()
+    public ApiResponse<CursorResponse<FriendResponse>> getAllPotentialFriends(
+            @RequestParam(required = false) Long lastId) {
+        return ApiResponse.<CursorResponse<FriendResponse>>builder()
                 .message("Friends retrieved successfully.")
-                .result(friendService.getAllPotentialFriends())
+                .result(friendService.getAllPotentialFriends(lastId))
                 .build();
     }
 

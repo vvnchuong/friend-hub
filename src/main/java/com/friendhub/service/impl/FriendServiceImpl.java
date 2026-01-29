@@ -4,6 +4,7 @@ import com.friendhub.dto.request.FriendAcceptRequest;
 import com.friendhub.dto.request.FriendCreationRequest;
 import com.friendhub.dto.request.FriendRejectRequest;
 import com.friendhub.dto.request.UnFriendRequest;
+import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.FriendResponse;
 import com.friendhub.entity.Friend;
 import com.friendhub.entity.User;
@@ -15,11 +16,12 @@ import com.friendhub.repository.FriendRepository;
 import com.friendhub.repository.UserRepository;
 import com.friendhub.service.FriendService;
 import com.friendhub.utils.CurrentUser;
+import com.friendhub.utils.CursorPaginationUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,21 +36,19 @@ public class FriendServiceImpl implements FriendService {
         User me = getUser(CurrentUser.id());
         User other = getUser(request.getUserId());
 
-        if (me.getId() == other.getId()) {
+        if (me.getId() == other.getId())
             throw new AppException(ErrorCode.INVALID_JOIN_REQUEST);
-        }
 
         Friend friend = findOrCreate(me, other);
 
-        if (friend.getStatus() == FriendStatus.ACCEPTED) {
+        if (friend.getStatus() == FriendStatus.ACCEPTED)
             throw new AppException(ErrorCode.ALREADY_FRIENDS);
-        }
-        if (friend.getStatus() == FriendStatus.PENDING) {
+
+        if (friend.getStatus() == FriendStatus.PENDING)
             throw new AppException(ErrorCode.FRIEND_REQUEST_ALREADY_PENDING);
-        }
-        if (friend.getStatus() == FriendStatus.BLOCKED) {
+
+        if (friend.getStatus() == FriendStatus.BLOCKED)
             throw new AppException(ErrorCode.UNAUTHORIZED);
-        }
 
         friend.setRequester(me);
         friend.setStatus(FriendStatus.PENDING);
@@ -65,9 +65,8 @@ public class FriendServiceImpl implements FriendService {
         Friend friend = getFriend(me, requester);
 
         if (friend.getStatus() != FriendStatus.PENDING ||
-                friend.getRequester().getId() != requester.getId()) {
+                friend.getRequester().getId() != requester.getId())
             throw new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND);
-        }
 
         friend.setStatus(FriendStatus.ACCEPTED);
         friend.setUpdatedAt(Instant.now());
@@ -83,9 +82,8 @@ public class FriendServiceImpl implements FriendService {
         Friend friend = getFriend(me, requester);
 
         if (friend.getStatus() != FriendStatus.PENDING ||
-                friend.getRequester().getId() != requester.getId()) {
+                friend.getRequester().getId() != requester.getId())
             throw new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND);
-        }
 
         friend.setStatus(FriendStatus.REJECTED);
         friend.setUpdatedAt(Instant.now());
@@ -100,47 +98,68 @@ public class FriendServiceImpl implements FriendService {
 
         Friend friend = getFriend(me, other);
 
-        if (friend.getStatus() != FriendStatus.ACCEPTED) {
+        if (friend.getStatus() != FriendStatus.ACCEPTED)
             throw new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND);
-        }
 
         friendRepository.delete(friend);
     }
 
     @Override
-    public List<FriendResponse> getAllFriendsByUser() {
-        return friendRepository
-                .findFriends(CurrentUser.id(), FriendStatus.ACCEPTED)
-                .stream()
-                .map(f ->
-                        f.getUserLow().getId() == CurrentUser.id()
-                                ? f.getUserHigh()
-                                : f.getUserLow()
-                )
-                .map(userMapper::toUserResponse)
-                .map(FriendResponse::new)
-                .toList();
+    @Transactional(readOnly = true)
+    public CursorResponse<FriendResponse> getAllFriends(Long lastId) {
+        int pageSize = 12;
+
+        return CursorPaginationUtil.execute(
+                pageSize,
+
+                () -> friendRepository.findFriends(
+                        CurrentUser.id(),
+                        FriendStatus.ACCEPTED.name(),
+                        lastId,
+                        pageSize + 1
+                ),
+
+                Friend::getId,
+
+                friends -> friends.stream()
+                        .map(Friend::getRequester)
+                        .map(userMapper::toUserResponse)
+                        .map(FriendResponse::new)
+                        .toList()
+        );
     }
 
     @Override
-    public List<FriendResponse> getAllFriendRequestsByUser() {
-        return friendRepository
-                .findPendingRequests(CurrentUser.id())
-                .stream()
-                .map(Friend::getRequester)
-                .map(userMapper::toUserResponse)
-                .map(FriendResponse::new)
-                .toList();
+    public CursorResponse<FriendResponse> getAllFriendRequests(Long lastId) {
+        int pageSize = 9;
+
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () -> friendRepository
+                        .findPendingRequests(CurrentUser.id(), lastId, pageSize + 1),
+                Friend::getId,
+                f -> f.stream()
+                        .map(Friend::getRequester)
+                        .map(userMapper::toUserResponse)
+                        .map(FriendResponse::new)
+                        .toList()
+        );
     }
 
     @Override
-    public List<FriendResponse> getAllPotentialFriends() {
-        return userRepository
-                .findAllPotentialFriends(CurrentUser.id())
-                .stream()
-                .map(userMapper::toUserResponse)
-                .map(FriendResponse::new)
-                .toList();
+    public CursorResponse<FriendResponse> getAllPotentialFriends(Long lastId) {
+        int pageSize = 9;
+
+        return CursorPaginationUtil.execute(
+                pageSize,
+                () -> userRepository
+                        .findAllPotentialFriends(CurrentUser.id(), lastId, pageSize + 1),
+                User::getId,
+                u -> u.stream()
+                        .map(userMapper::toUserResponse)
+                        .map(FriendResponse::new)
+                        .toList()
+        );
     }
 
     @Override

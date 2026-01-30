@@ -159,6 +159,25 @@ public class UserGroupMemberService {
                 groupJoinRequestRepository.save(newRequest));
     }
 
+    @Transactional
+    public void cancelRequestToJoinGroup(long groupId) {
+        User user = userService.getUserById(CurrentUser.id());
+
+        GroupMemberId memberId = new GroupMemberId(groupId, user.getId());
+        if (groupMemberService.isExistedById(memberId))
+            throw new AppException(ErrorCode.USER_ALREADY_MEMBER);
+
+        GroupJoinRequest request =
+                groupJoinRequestRepository
+                        .findByUserIdAndGroupId(CurrentUser.id(), groupId);
+
+        if (request == null || request.getStatus() != JoinRequestStatus.PENDING) {
+            throw new AppException(ErrorCode.NO_PENDING_JOIN_REQUEST);
+        }
+
+        groupJoinRequestRepository.delete(request);
+    }
+
     @Transactional(readOnly = true)
     public List<GroupJoinRequestResponse> getPendingJoinRequests(long groupId) {
         validateAdminOrModerator(groupId, CurrentUser.id());
@@ -202,7 +221,6 @@ public class UserGroupMemberService {
         }
 
         joinRequest.setHandledBy(handler);
-        joinRequest.setHandledAt(Instant.now());
         groupJoinRequestRepository.save(joinRequest);
     }
 

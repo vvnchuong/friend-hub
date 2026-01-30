@@ -35,16 +35,16 @@ public class GroupMemberController {
             @PathVariable("memberId") long memberId) {
         userGroupMemberService.removeMemberFromGroup(groupId, memberId);
         return ApiResponse.<Void>builder()
-                .message("Remove a member from the group.")
+                .message("The member has been removed successfully.")
                 .build();
     }
 
-    @PostMapping("/{groupId}/leave")
+    @DeleteMapping("/{groupId}/members/me")
     public ApiResponse<Void> leaveGroup(
             @PathVariable("groupId") long groupId) {
         userGroupMemberService.leaveGroup(groupId);
         return ApiResponse.<Void>builder()
-                .message("Leave a group successfully.")
+                .message("Group left successfully.")
                 .build();
     }
 
@@ -56,7 +56,7 @@ public class GroupMemberController {
         userGroupMemberService.updateMemberRole(groupId, memberId, role.getRole());
 
         return ApiResponse.<Void>builder()
-                .message("Update member role successfully.")
+                .message("Group updated member role successfully.")
                 .build();
     }
 
@@ -65,7 +65,7 @@ public class GroupMemberController {
             @PathVariable("groupId") long groupId) {
         userGroupMemberService.joinGroup(groupId);
         return ApiResponse.<Void>builder()
-                .message("Join successfully.")
+                .message("Group joined successfully.")
                 .build();
     }
 
@@ -73,8 +73,17 @@ public class GroupMemberController {
     public ApiResponse<GroupJoinRequestResponse> requestToJoinGroup(
             @PathVariable("groupId") long groupId) {
         return ApiResponse.<GroupJoinRequestResponse>builder()
-                .message("Join request sent successfully.")
+                .message("Group join request sent successfully.")
                 .result(userGroupMemberService.requestToJoinGroup(groupId))
+                .build();
+    }
+
+    @DeleteMapping("/{groupId}/request")
+    public ApiResponse<Void> cancelJoinRequest(
+            @PathVariable("groupId") long groupId) {
+        userGroupMemberService.cancelRequestToJoinGroup(groupId);
+        return ApiResponse.<Void>builder()
+                .message("Join request canceled successfully.")
                 .build();
     }
 
@@ -82,7 +91,7 @@ public class GroupMemberController {
     public ApiResponse<List<GroupJoinRequestResponse>> getPendingJoinRequests(
             @PathVariable("groupId") long groupId) {
         return ApiResponse.<List<GroupJoinRequestResponse>>builder()
-                .message("Get pending requests.")
+                .message("Getting all pending requests successful.")
                 .result(userGroupMemberService.getPendingJoinRequests(groupId))
                 .build();
     }
@@ -93,9 +102,8 @@ public class GroupMemberController {
             @PathVariable("requestId") long requestId,
             @RequestBody HandleJoinRequestRequest request) {
         userGroupMemberService.handleJoinRequest(groupId, requestId, request);
-
         return ApiResponse.<Void>builder()
-                .message("Handle join request.")
+                .message("Handling join request.")
                 .build();
     }
 

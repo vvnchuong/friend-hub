@@ -53,9 +53,8 @@ public class AdminGroupService {
         return PageResponse.<GroupResponse>builder()
                 .data(page.getContent().stream()
                         .map(group -> {
-                            User creator = userService.getUserById(group.getCreatedBy());
                             long countTotalMembers = groupMemberService.countTotalMembers(group.getId());
-                    return groupMapper.toResponse(group, creator, countTotalMembers);
+                    return groupMapper.toResponse(group, countTotalMembers);
                 }).toList())
                 .page(page.getNumber())
                 .size(page.getSize())
@@ -69,8 +68,6 @@ public class AdminGroupService {
     @Transactional(readOnly = true)
     public GroupDetailResponse getGroupDetail(long groupId) {
         Group group = groupService.getGroupById(groupId);
-
-        User user = userService.getUserById(CurrentUser.id());
 
         long countTotalMembers = groupMemberService.countTotalMembers(groupId);
         long countTotalPosts = postService.countTotalPostsByGroupId(groupId);
@@ -95,12 +92,10 @@ public class AdminGroupService {
                             groupId, CurrentUser.id(), JoinRequestStatus.PENDING);
 
         return groupMapper.toGroupDetailResponse(group,
-                user,
                 countTotalMembers,
                 countTotalPosts,
                 isJoined,
                 joinRequestStatus,
-                currentMember != null ? currentMember.getRole() : null,
                 hasPendingRequest);
     }
 
@@ -115,11 +110,9 @@ public class AdminGroupService {
         group.setUpdatedAt(Instant.now());
         group = groupService.updateGroup(group);
 
-        User creator = userService.getUserById(group.getCreatedBy());
-
         long totalMembers = groupMemberService.countTotalMembers(groupId);
 
-        return groupMapper.toResponse(group, creator, totalMembers);
+        return groupMapper.toResponse(group, totalMembers);
     }
 
     @Transactional

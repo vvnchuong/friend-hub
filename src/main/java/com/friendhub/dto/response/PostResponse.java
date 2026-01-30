@@ -1,5 +1,6 @@
 package com.friendhub.dto.response;
 
+import com.friendhub.enums.CommentPolicy;
 import com.friendhub.enums.Privacy;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class PostResponse {
     Instant createdAt;
     Instant updatedAt;
     Privacy privacy;
+    CommentPolicy commentPolicy;
     int totalLikes;
     int totalComments;
     boolean isLiked;

@@ -12,10 +12,7 @@ import com.friendhub.enums.ErrorCode;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.CommentMapper;
 import com.friendhub.repository.CommentRepository;
-import com.friendhub.service.CommentService;
-import com.friendhub.service.NotificationService;
-import com.friendhub.service.PostService;
-import com.friendhub.service.UserService;
+import com.friendhub.service.*;
 import com.friendhub.utils.CurrentUser;
 import com.friendhub.utils.CursorPaginationUtil;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +28,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final PostService postService;
     private final UserService userService;
+    private final FriendService friendService;
     private final NotificationService notificationService;
     private final CommentMapper commentMapper;
 
@@ -45,6 +43,20 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = commentMapper.toComment(request);
         comment.setPost(post);
         comment.setUser(user);
+
+        CommentPolicy policy = post.getCommentPolicy();
+
+        switch (policy) {
+            case OPEN -> {
+            }
+            case FRIEND_ONLY -> {
+                if (!friendService.areFriends(
+                        post.getUser().getId(),
+                        CurrentUser.id()))
+                    throw new AppException(ErrorCode.COMMENT_RESTRICTED_TO_FRIENDS);
+            }
+            case DISABLED -> throw new AppException(ErrorCode.COMMENT_DISABLED_BY_ADMIN);
+        }
 
         if (!(user.getId() == post.getUser().getId()))
             notificationService
@@ -80,7 +92,7 @@ public class CommentServiceImpl implements CommentService {
         if (!isAuthor)
             throw new AppException(ErrorCode.UNAUTHORIZED);
 
-        if (post.getCommentPolicy() == CommentPolicy.DISABLED)
+        if (post.getCommentPolicy().equals(CommentPolicy.DISABLED))
             throw new AppException(ErrorCode.COMMENT_DISABLED_BY_ADMIN);
 
         post.setCommentPolicy(request.getPolicy());

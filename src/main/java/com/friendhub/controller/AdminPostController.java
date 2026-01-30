@@ -42,7 +42,7 @@ public class AdminPostController {
                 .build();
     }
 
-    @PutMapping("/{postId}/comment-policy")
+    @PatchMapping("/{postId}/comment-policy")
     public ApiResponse<Void> adminUpdateCommentPolicy(
             @PathVariable("postId") long postId,
             @RequestBody @Valid UpdateCommentPolicyRequest request) {

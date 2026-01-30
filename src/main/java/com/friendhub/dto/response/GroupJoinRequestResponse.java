@@ -22,7 +22,6 @@ public class GroupJoinRequestResponse {
     UserBasicInfoResponse user;
     JoinRequestStatus status;
     Instant createdAt;
-    Instant handledAt;
     UserBasicInfoResponse handledBy;
 
 }

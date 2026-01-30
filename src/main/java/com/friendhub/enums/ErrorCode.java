@@ -35,6 +35,9 @@ public enum ErrorCode {
     CANNOT_SHARE_OWN_POST(3002, "You cannot share your own post.", HttpStatus.BAD_REQUEST),
     POST_ACCESS_DENIED(3040, "You do not have access to this post.", HttpStatus.FORBIDDEN),
 
+    COMMENT_PERMISSION_DENIED(4001, "This post only allows comments from friends.", HttpStatus.FORBIDDEN),
+    COMMENT_RESTRICTED_TO_FRIENDS(402, "Only friends of the post owner can comment on this post.", HttpStatus.FORBIDDEN),
+
     ALREADY_FRIENDS(5001, "You are already friends.", HttpStatus.BAD_REQUEST),
     FRIEND_REQUEST_ALREADY_PENDING(5002, "Friend request is already pending.", HttpStatus.BAD_REQUEST),
     FRIEND_REQUEST_NOT_FOUND(5003, "Friend request not found.", HttpStatus.NOT_FOUND),
@@ -64,6 +67,7 @@ public enum ErrorCode {
     POST_ALREADY_SAVED(5027, "Post has already been saved.", HttpStatus.CONFLICT),
     CANNOT_SAVE_OWN_POST(5028, "You cannot save your own post.", HttpStatus.BAD_REQUEST),
     GROUP_BANNED(5029, "This group has been banned.", HttpStatus.FORBIDDEN),
+    NO_PENDING_JOIN_REQUEST(5030, "No pending join request to cancel.", HttpStatus.BAD_REQUEST),
 
     FILE_EMPTY(8001, "File is empty. Please upload a file.", HttpStatus.BAD_REQUEST),
     INVALID_FILE(8002, "Invalid file.", HttpStatus.UNSUPPORTED_MEDIA_TYPE),

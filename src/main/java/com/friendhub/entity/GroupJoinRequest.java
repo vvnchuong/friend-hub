@@ -25,7 +25,6 @@ public class GroupJoinRequest  {
     JoinRequestStatus status;
 
     Instant createdAt;
-    Instant handledAt;
 
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
@@ -38,5 +37,11 @@ public class GroupJoinRequest  {
     @ManyToOne
     @JoinColumn(name = "handled_by")
     User handledBy;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Instant.now();
+        this.status = JoinRequestStatus.PENDING;
+    }
 
 }

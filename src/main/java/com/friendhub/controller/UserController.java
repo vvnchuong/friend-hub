@@ -19,15 +19,6 @@ public class UserController {
 
     private final AccountService accountService;
 
-    @PostMapping
-    public ApiResponse<UserResponse> createUser(
-            @RequestBody @Valid UserCreationRequest request) {
-        return ApiResponse.<UserResponse>builder()
-                .message("User created successfully.")
-                .result(accountService.register(request))
-                .build();
-    }
-
     @GetMapping("/{userId}")
     public ApiResponse<UserResponse> getUserById(
             @PathVariable("userId") long userId) {

@@ -8,6 +8,7 @@ import com.friendhub.dto.response.PostResponse;
 import com.friendhub.entity.Post;
 import com.friendhub.entity.PostMedia;
 import com.friendhub.entity.User;
+import com.friendhub.enums.CommentPolicy;
 import com.friendhub.enums.ErrorCode;
 import com.friendhub.enums.Privacy;
 import com.friendhub.exception.AppException;
@@ -40,6 +41,7 @@ public class UserPostService {
 
         Post post = postMapper.toPost(request);
         post.setUser(user);
+        post.setCommentPolicy(CommentPolicy.OPEN);
 
         List<PostMedia> mediaList = request.getMediaList()
                 .stream()
@@ -181,6 +183,7 @@ public class UserPostService {
         sharePost.setContent(request.getContent());
         sharePost.setPrivacy(request.getPrivacy());
         sharePost.setOriginalPost(originalPost);
+        sharePost.setCommentPolicy(CommentPolicy.OPEN);
 
         Post saved = postService.createPost(sharePost, List.of());
 

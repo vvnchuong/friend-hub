@@ -32,4 +32,9 @@ public class Comment {
     @JoinColumn(name = "user_id")
     User user;
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Instant.now();
+    }
+
 }

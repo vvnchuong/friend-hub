@@ -14,9 +14,12 @@ import com.friendhub.exception.AppException;
 import com.friendhub.mapper.UserMapper;
 import com.friendhub.utils.CurrentUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -29,9 +32,6 @@ public class AccountService {
 
     @Transactional
     public UserResponse register(UserCreationRequest request) {
-        if (userService.isExistedByEmail(request.getEmail()))
-            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
-
         User user = userMapper.toUser(request);
         Role role = roleService.getRoleByName(UserRole.MEMBER);
 
@@ -39,7 +39,13 @@ public class AccountService {
         user.setRole(role);
         user.setStatus(UserStatus.ACTIVE);
 
-        return userMapper.toUserResponse(userService.createUser(user));
+        try {
+            user = userService.createUser(user);
+        } catch (DataIntegrityViolationException e) {
+            throw new AppException(ErrorCode.USER_ALREADY_EXISTS);
+        }
+
+        return userMapper.toUserResponse(user);
     }
 
     @Transactional(readOnly = true)
@@ -53,6 +59,7 @@ public class AccountService {
     @Transactional
     public UserResponse updateMyProfile(UserUpdateRequest request) {
         User user = userService.getUserById(CurrentUser.id());
+        user.setUpdatedAt(Instant.now());
 
         userService.assertActive(user);
 

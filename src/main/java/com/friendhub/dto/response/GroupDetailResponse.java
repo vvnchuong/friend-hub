@@ -1,7 +1,6 @@
 package com.friendhub.dto.response;
 
 import com.friendhub.enums.GroupPrivacy;
-import com.friendhub.enums.GroupRole;
 import com.friendhub.enums.JoinRequestStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -22,14 +21,12 @@ public class GroupDetailResponse {
     String description;
     String coverUrl;
     GroupPrivacy privacy;
-    UserBasicInfoResponse creator;
+    long createdBy;
     Instant createdAt;
     Instant updatedAt;
     Integer totalMembers;
     Integer totalPosts;
-    Boolean isJoined;
-    JoinRequestStatus status;
-    GroupRole role;
+    JoinRequestStatus joinStatus;
     Boolean hasPendingRequest;
 
 }

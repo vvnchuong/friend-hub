@@ -2,7 +2,6 @@ package com.friendhub.entity;
 
 import com.friendhub.enums.GroupPrivacy;
 import com.friendhub.enums.GroupStatus;
-import com.friendhub.enums.Privacy;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -49,5 +48,10 @@ public class Group {
 
     @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<Notification> notifications = new ArrayList<>();
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Instant.now();
+    }
 
 }

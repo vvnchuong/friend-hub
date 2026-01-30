@@ -20,10 +20,4 @@ public interface CommentMapper {
     @Mapping(target = "author.role", source = "user.role.name")
     CommentResponse toCommentResponse(Comment comment);
 
-    @AfterMapping
-    default void setCreatedAt(@MappingTarget Comment comment) {
-        if (comment.getCreatedAt() == null)
-            comment.setCreatedAt(Instant.now());
-    }
-
 }

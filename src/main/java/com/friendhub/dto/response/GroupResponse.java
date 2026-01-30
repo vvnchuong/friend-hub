@@ -21,7 +21,7 @@ public class GroupResponse {
     GroupPrivacy privacy;
     String description;
     String coverUrl;
-    UserResponse creator;
+    long createdBy;
     GroupStatus status;
     Instant createdAt;
     Instant updatedAt;

@@ -123,7 +123,7 @@ public class FriendServiceImpl implements FriendService {
 
                 friends -> friends.stream()
                         .map(Friend::getRequester)
-                        .map(userMapper::toUserResponse)
+                        .map(userMapper::toUserBasicResponse)
                         .map(FriendResponse::new)
                         .toList()
         );
@@ -140,7 +140,7 @@ public class FriendServiceImpl implements FriendService {
                 Friend::getId,
                 f -> f.stream()
                         .map(Friend::getRequester)
-                        .map(userMapper::toUserResponse)
+                        .map(userMapper::toUserBasicResponse)
                         .map(FriendResponse::new)
                         .toList()
         );
@@ -156,7 +156,7 @@ public class FriendServiceImpl implements FriendService {
                         .findAllPotentialFriends(CurrentUser.id(), lastId, pageSize + 1),
                 User::getId,
                 u -> u.stream()
-                        .map(userMapper::toUserResponse)
+                        .map(userMapper::toUserBasicResponse)
                         .map(FriendResponse::new)
                         .toList()
         );

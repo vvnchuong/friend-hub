@@ -51,7 +51,7 @@ public class UserGroupService {
 
         groupMemberService.save(adminMember);
 
-        return groupMapper.toResponse(group, creator, 1);
+        return groupMapper.toResponse(group, 1);
     }
 
     @Transactional(readOnly = true)
@@ -74,7 +74,6 @@ public class UserGroupService {
     @Transactional(readOnly = true)
     public GroupDetailResponse getGroupDetail(long groupId) {
         Group group = groupService.getGroupById(groupId);
-        User user = userService.getUserById(CurrentUser.id());
 
         long countTotalMembers = groupMemberService.countTotalMembers(groupId);
         long countTotalPosts = postService.countTotalPostsByGroupId(groupId);
@@ -102,12 +101,10 @@ public class UserGroupService {
             throw new AppException(ErrorCode.GROUP_BANNED);
 
        return groupMapper.toGroupDetailResponse(group,
-               user,
                countTotalMembers,
                countTotalPosts,
                isJoined,
                joinRequestStatus,
-               currentMember != null ? currentMember.getRole() : null,
                hasPendingRequest);
     }
 
@@ -140,11 +137,9 @@ public class UserGroupService {
         group.setUpdatedAt(Instant.now());
         group = groupService.updateGroup(group);
 
-        User creator = userService.getUserById(CurrentUser.id());
-
         long totalMembers = groupMemberService.countTotalMembers(groupId);
 
-        return groupMapper.toResponse(group, creator, totalMembers);
+        return groupMapper.toResponse(group, totalMembers);
     }
 
     @Transactional
@@ -158,11 +153,9 @@ public class UserGroupService {
     }
 
     private GroupResponse mapToGroupResponse(Group group) {
-        User creator = userService.getUserById(group.getCreatedBy());
-
         long totalMembers = groupMemberService.countTotalMembers(group.getId());
 
-        return groupMapper.toResponse(group, creator, totalMembers);
+        return groupMapper.toResponse(group, totalMembers);
     }
 
 }

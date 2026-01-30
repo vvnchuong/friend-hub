@@ -5,10 +5,7 @@ import com.friendhub.dto.request.PostUpdateRequest;
 import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.PostResponse;
 import com.friendhub.entity.*;
-import com.friendhub.enums.ErrorCode;
-import com.friendhub.enums.GroupPrivacy;
-import com.friendhub.enums.GroupRole;
-import com.friendhub.enums.Privacy;
+import com.friendhub.enums.*;
 import com.friendhub.exception.AppException;
 import com.friendhub.mapper.PostMapper;
 import com.friendhub.mapper.PostMediaMapper;
@@ -46,6 +43,7 @@ public class UserGroupPostService {
         post.setGroup(group);
         post.setPrivacy(Privacy.PUBLIC);
         post.setUser(user);
+        post.setCommentPolicy(CommentPolicy.OPEN);
 
         List<PostMedia> mediaList = request.getMediaList()
                 .stream()

@@ -23,7 +23,6 @@ public class UserResponse {
     String email;
     String avatarUrl;
     String coverUrl;
-    UserRole role;
     String phoneNumber;
     String address;
     String bio;

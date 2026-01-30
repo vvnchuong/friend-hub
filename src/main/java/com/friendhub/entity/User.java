@@ -89,4 +89,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     List<Collection> collections = new ArrayList<>();
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = Instant.now();
+    }
+
 }

@@ -65,13 +65,11 @@ public interface PostRepository extends JpaRepository<Post, Long>,
             "AND u.status = 'ACTIVE' " +
             "JOIN groups g " +
             "ON p.group_id = g.id " +
-            "JOIN users u " +
-            "ON u.id = p.user_id " +
             "WHERE g.id = :groupId " +
-            "AND u.status = 'ACTIVE' " +
             "AND (:lastId IS NULL OR p.id < :lastId) " +
             "ORDER BY p.id DESC " +
-            "LIMIT :limit", nativeQuery = true)
+            "LIMIT :limit",
+            nativeQuery = true)
     List<Post> findAllPostsInGroup(@Param("groupId") long groupId,
                                    @Param("lastId") Long lastId,
                                    @Param("limit") int limit);

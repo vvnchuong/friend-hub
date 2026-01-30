@@ -2,8 +2,11 @@ package com.friendhub.service;
 
 import com.friendhub.dto.request.AuthenticationRequest;
 import com.friendhub.dto.request.IntrospectRequest;
+import com.friendhub.dto.request.LogoutRequest;
+import com.friendhub.dto.request.RefreshTokenRequest;
 import com.friendhub.dto.response.AuthenticationResponse;
 import com.friendhub.dto.response.IntrospectResponse;
+import com.friendhub.entity.InvalidatedToken;
 import com.friendhub.entity.User;
 import com.friendhub.enums.ErrorCode;
 import com.friendhub.enums.UserStatus;
@@ -15,6 +18,8 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,10 +32,11 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class AuthenticationService {
 
     private final InvalidatedTokenRepository invalidatedTokenRepository;
-
     private final UserRepository userRepository;
 
     @Value("${jwt.signerKey}")
@@ -38,12 +44,6 @@ public class AuthenticationService {
 
     @Value("${jwt.validDuration}")
     private long VALID_DURATION;
-
-    public AuthenticationService(InvalidatedTokenRepository invalidatedTokenRepository,
-                                 UserRepository userRepository) {
-        this.invalidatedTokenRepository = invalidatedTokenRepository;
-        this.userRepository = userRepository;
-    }
 
     public IntrospectResponse introspect(IntrospectRequest request) {
         String token = request.getToken();
@@ -82,6 +82,51 @@ public class AuthenticationService {
                 .build();
     }
 
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        try {
+            SignedJWT signedJWT = verifyToken(request.getToken());
+
+            String jit = signedJWT.getJWTClaimsSet().getJWTID();
+            Instant expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime().toInstant();
+
+            InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                    .id(jit)
+                    .expiryTime(expiryTime)
+                    .build();
+
+            invalidatedTokenRepository.save(invalidatedToken);
+        } catch (AppException e) {
+            log.info("Token already expired.");
+        }
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest request)
+            throws ParseException, JOSEException {
+        SignedJWT signedJWT = verifyToken(request.getToken());
+
+        String jit = signedJWT.getJWTClaimsSet().getJWTID();
+        Instant expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime().toInstant();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        String email = signedJWT.getJWTClaimsSet().getSubject();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+
+        String token = generateToken(user);
+
+        return AuthenticationResponse.builder()
+                .authenticated(true)
+                .token(token)
+                .build();
+    }
+
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {
         JWSVerifier verifier = new MACVerifier(SIGNED_KEY.getBytes());
 
@@ -105,15 +150,14 @@ public class AuthenticationService {
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
-                .subject(user.getFirstName() + " " + user.getLastName())
-                .issuer("friendhub.com")
+                .subject(user.getEmail())
+                .issuer("friend-hub.com")
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now()
                         .plus(VALID_DURATION, ChronoUnit.SECONDS)
                         .toEpochMilli()))
                 .jwtID(UUID.randomUUID().toString())
                 .claim("user_id", user.getId())
-                .claim("email", user.getEmail())
                 .claim("firstName", user.getFirstName())
                 .claim("lastName", user.getLastName())
                 .claim("scope", user.getRole().getName())

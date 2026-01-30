@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ForgetPasswordRequest {
+public class ForgotPasswordRequest {
 
     String email;
 

@@ -5,6 +5,8 @@ import com.friendhub.enums.UserRole;
 
 public interface RoleService {
 
+    void createRole(Role role);
+
     Role getRoleByName(UserRole role);
 
 }

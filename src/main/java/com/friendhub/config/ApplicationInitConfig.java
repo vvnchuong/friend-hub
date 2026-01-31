@@ -23,7 +23,10 @@ public class ApplicationInitConfig {
         return args -> {
             if (userRepository.findByEmail("admin@gmail.com").isEmpty()) {
 
-                Role role = roleService.getRoleByName(UserRole.ADMIN);
+                Role role = new Role();
+                role.setName(UserRole.ADMIN);
+
+                roleService.createRole(role);
 
                 User user = User.builder()
                         .firstName("admin")

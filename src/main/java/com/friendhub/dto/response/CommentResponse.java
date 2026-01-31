@@ -1,7 +1,5 @@
 package com.friendhub.dto.response;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,7 +16,7 @@ public class CommentResponse {
 
     String content;
     long postId;
-    UserResponse author;
+    UserBasicInfoResponse author;
     Instant createdAt;
 
 }

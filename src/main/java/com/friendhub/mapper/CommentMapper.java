@@ -17,7 +17,6 @@ public interface CommentMapper {
     Comment toComment(CommentCreationRequest request);
 
     @Mapping(target = "author", source = "user")
-    @Mapping(target = "author.role", source = "user.role.name")
     CommentResponse toCommentResponse(Comment comment);
 
 }

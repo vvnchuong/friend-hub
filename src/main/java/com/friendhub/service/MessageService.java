@@ -43,7 +43,7 @@ public class MessageService {
         return CursorPaginationUtil.execute(
                 pageSize,
                 () -> messageRepository
-                        .findChatMessages(user1Id, user2Id, lastId),
+                        .findChatMessages(user1Id, user2Id, lastId, pageSize + 1),
                 Message::getId,
                 m -> m.stream()
                         .map(msg -> convertToDTO(msg, currentUserId))

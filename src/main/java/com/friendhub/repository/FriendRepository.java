@@ -19,15 +19,15 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     @Query(value = "SELECT f.* " +
             "FROM friends f " +
             "JOIN users u " +
-            "ON u.id = IF (f.user_low_id = :userId, " +
-            " f.user_high_id, " +
-            "f.user_low_id) " +
+            "ON ((f.user_low_id = :userId AND u.id = f.user_high_id) " +
+            "OR (f.user_high_id = :userId AND u.id = f.user_low_id)) " +
             "AND u.status = 'ACTIVE' " +
-            "WHERE (:lastId  IS NULL OR f.id < :lastId) " +
+            "WHERE (:lastId IS NULL OR f.id < :lastId) " +
             "AND f.status = :status " +
             "AND (f.user_low_id = :userId OR f.user_high_id = :userId) " +
-            "ORDER BY created_at DESC " +
-            "LIMIT :limit", nativeQuery = true)
+            "ORDER BY f.id DESC " +
+            "LIMIT :limit",
+            nativeQuery = true)
     List<Friend> findFriends(@Param("userId") long userId,
                              @Param("status") String status,
                              @Param("lastId") Long lastId,

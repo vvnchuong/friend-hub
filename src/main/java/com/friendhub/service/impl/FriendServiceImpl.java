@@ -122,7 +122,9 @@ public class FriendServiceImpl implements FriendService {
                 Friend::getId,
 
                 friends -> friends.stream()
-                        .map(Friend::getRequester)
+                        .map(f -> f.getUserLow().getId() == CurrentUser.id()
+                                ? f.getUserHigh()
+                                : f.getUserLow())
                         .map(userMapper::toUserBasicResponse)
                         .map(FriendResponse::new)
                         .toList()

@@ -3,7 +3,6 @@ package com.friendhub.controller;
 import com.friendhub.dto.request.UserUpdateStatusRequest;
 import com.friendhub.dto.request.ChangePasswordRequest;
 import com.friendhub.dto.response.ApiResponse;
-import com.friendhub.dto.request.UserCreationRequest;
 import com.friendhub.dto.request.UserUpdateRequest;
 import com.friendhub.dto.response.UserResponse;
 import com.friendhub.service.AccountService;

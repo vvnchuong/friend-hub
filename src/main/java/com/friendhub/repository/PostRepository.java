@@ -63,7 +63,7 @@ public interface PostRepository extends JpaRepository<Post, Long>,
             "JOIN users u " +
             "ON u.id = p.user_id " +
             "AND u.status = 'ACTIVE' " +
-            "JOIN groups g " +
+            "JOIN user_groups g " +
             "ON p.group_id = g.id " +
             "WHERE g.id = :groupId " +
             "AND (:lastId IS NULL OR p.id < :lastId) " +

@@ -14,7 +14,7 @@ public interface GroupRepository extends JpaRepository<Group, Long>,
         JpaSpecificationExecutor<Group> {
 
     @Query(value = "SELECT g.* " +
-            "FROM groups g " +
+            "FROM user_groups g " +
             "LEFT JOIN group_members gm " +
             "ON g.id = gm.group_id " +
             "AND gm.user_id = :userId " +
@@ -34,7 +34,7 @@ public interface GroupRepository extends JpaRepository<Group, Long>,
     );
 
     @Query(value = "SELECT g.* " +
-            "FROM groups g " +
+            "FROM user_groups g " +
             "JOIN group_members gm " +
             "ON g.id = gm.group_id " +
             "WHERE gm.user_id = :userId " +

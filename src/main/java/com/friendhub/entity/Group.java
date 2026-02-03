@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "groups")
+@Table(name = "user_groups")
 public class Group {
 
     @Id

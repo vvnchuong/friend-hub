@@ -26,4 +26,9 @@ public class RoleServiceImpl implements RoleService {
                 .orElseThrow(() -> new AppException(ErrorCode.ROLE_NOT_FOUND));
     }
 
+    @Override
+    public boolean isExistedByName(UserRole name) {
+        return roleRepository.existsByName(name);
+    }
+
 }

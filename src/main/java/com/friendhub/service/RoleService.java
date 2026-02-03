@@ -9,4 +9,6 @@ public interface RoleService {
 
     Role getRoleByName(UserRole role);
 
+    boolean isExistedByName(UserRole name);
+
 }

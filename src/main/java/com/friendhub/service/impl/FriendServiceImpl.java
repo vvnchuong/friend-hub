@@ -1,9 +1,6 @@
 package com.friendhub.service.impl;
 
-import com.friendhub.dto.request.FriendAcceptRequest;
 import com.friendhub.dto.request.FriendCreationRequest;
-import com.friendhub.dto.request.FriendRejectRequest;
-import com.friendhub.dto.request.UnFriendRequest;
 import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.FriendResponse;
 import com.friendhub.entity.Friend;
@@ -47,9 +44,6 @@ public class FriendServiceImpl implements FriendService {
         if (friend.getStatus() == FriendStatus.PENDING)
             throw new AppException(ErrorCode.FRIEND_REQUEST_ALREADY_PENDING);
 
-        if (friend.getStatus() == FriendStatus.BLOCKED)
-            throw new AppException(ErrorCode.UNAUTHORIZED);
-
         friend.setRequester(me);
         friend.setStatus(FriendStatus.PENDING);
         friend.setUpdatedAt(Instant.now());
@@ -58,9 +52,9 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void acceptFriendRequest(FriendAcceptRequest request) {
+    public void acceptFriendRequest(long userId) {
         User me = getUser(CurrentUser.id());
-        User requester = getUser(request.getUserId());
+        User requester = getUser(userId);
 
         Friend friend = getFriend(me, requester);
 
@@ -75,9 +69,9 @@ public class FriendServiceImpl implements FriendService {
     }
 
     @Override
-    public void rejectFriendRequest(FriendRejectRequest request) {
+    public void rejectFriendRequest(long userId) {
         User me = getUser(CurrentUser.id());
-        User requester = getUser(request.getUserId());
+        User requester = getUser(userId);
 
         Friend friend = getFriend(me, requester);
 
@@ -85,16 +79,13 @@ public class FriendServiceImpl implements FriendService {
                 friend.getRequester().getId() != requester.getId())
             throw new AppException(ErrorCode.FRIEND_REQUEST_NOT_FOUND);
 
-        friend.setStatus(FriendStatus.REJECTED);
-        friend.setUpdatedAt(Instant.now());
-
-        friendRepository.save(friend);
+        friendRepository.delete(friend);
     }
 
     @Override
-    public void unFriend(UnFriendRequest request) {
+    public void unFriend(long userId) {
         User me = getUser(CurrentUser.id());
-        User other = getUser(request.getUserId());
+        User other = getUser(userId);
 
         Friend friend = getFriend(me, other);
 

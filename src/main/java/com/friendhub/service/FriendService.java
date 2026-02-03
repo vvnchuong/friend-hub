@@ -1,9 +1,6 @@
 package com.friendhub.service;
 
-import com.friendhub.dto.request.FriendAcceptRequest;
-import com.friendhub.dto.request.FriendRejectRequest;
 import com.friendhub.dto.request.FriendCreationRequest;
-import com.friendhub.dto.request.UnFriendRequest;
 import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.FriendResponse;
 
@@ -11,11 +8,11 @@ public interface FriendService {
 
     void addFriendRequest(FriendCreationRequest request);
 
-    void acceptFriendRequest(FriendAcceptRequest request);
+    void acceptFriendRequest(long userId);
 
-    void rejectFriendRequest(FriendRejectRequest request);
+    void rejectFriendRequest(long userId);
 
-    void unFriend(UnFriendRequest request);
+    void unFriend(long userId);
 
     CursorResponse<FriendResponse> getAllFriends(Long lastId);
 

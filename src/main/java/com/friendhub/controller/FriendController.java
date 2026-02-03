@@ -1,9 +1,6 @@
 package com.friendhub.controller;
 
-import com.friendhub.dto.request.FriendAcceptRequest;
-import com.friendhub.dto.request.FriendRejectRequest;
 import com.friendhub.dto.request.FriendCreationRequest;
-import com.friendhub.dto.request.UnFriendRequest;
 import com.friendhub.dto.response.ApiResponse;
 import com.friendhub.dto.response.CursorResponse;
 import com.friendhub.dto.response.FriendResponse;
@@ -28,28 +25,28 @@ public class FriendController {
                 .build();
     }
 
-    @PostMapping("/accept")
-    public ApiResponse<String> acceptFriendRequest(
-            @RequestBody @Valid FriendAcceptRequest request) {
-        friendService.acceptFriendRequest(request);
-        return ApiResponse.<String>builder()
+    @PostMapping("/{userId}/accept")
+    public ApiResponse<Void> acceptFriendRequest(
+            @PathVariable("userId") long userId) {
+        friendService.acceptFriendRequest(userId);
+        return ApiResponse.<Void>builder()
                 .message("Friend request accepted successfully.")
                 .build();
     }
 
-    @PostMapping("/reject")
-    public ApiResponse<String> rejectFriendRequest(
-            @RequestBody @Valid FriendRejectRequest request) {
-        friendService.rejectFriendRequest(request);
-        return ApiResponse.<String>builder()
+    @PostMapping("/{userId}/reject")
+    public ApiResponse<Void> rejectFriendRequest(
+            @PathVariable("userId") long userId) {
+        friendService.rejectFriendRequest(userId);
+        return ApiResponse.<Void>builder()
                 .message("Friend request canceled successfully.")
                 .build();
     }
 
-    @PostMapping("/unfriend")
+    @PostMapping("/{userId}/unfriend")
     public ApiResponse<String> unFriend(
-            @RequestBody @Valid UnFriendRequest request) {
-        friendService.unFriend(request);
+            @PathVariable("userId") long userId) {
+        friendService.unFriend(userId);
         return ApiResponse.<String>builder()
                 .message("User unfriended successfully.")
                 .build();

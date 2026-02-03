@@ -55,7 +55,7 @@ public class PostController {
                 .build();
     }
 
-    @GetMapping("/friends")
+    @GetMapping("/feed")
     public ApiResponse<CursorResponse<PostResponse>> getFeed(
             @RequestParam(required = false) Long lastId) {
         return ApiResponse.<CursorResponse<PostResponse>>builder()

@@ -1,0 +1,3275 @@
+{
+  "info": {
+    "_postman_id": "47dfe12b-97b8-4eb8-a08d-9d67d7c8d20d",
+    "name": "Friend Hub",
+    "description": "## Get started with Friend Hub\n\nThis collection is designed to help you explore and test the Friend Hub API.  \nIt covers the main features of a social network:\n\n- Authentication\n    \n- Users\n    \n- Friends\n    \n- Groups and group members\n    \n- Posts, comments, likes, and collections of posts\n    \n- Notifications\n    \n- Files (images, videos, avatars)\n    \n- Chat\n    \n- Reports and admin moderation\n    \n\nUse this collection to:\n\n- Log in and manage user accounts\n    \n- Create and manage groups and group members\n    \n- Create posts, comment, like, and share\n    \n- Manage friendships and see friends’ posts\n    \n- Upload files (images, videos, avatars)\n    \n- View notifications and reports\n    \n- Perform admin operations for users, groups, posts, and reports\n    \n- Test end‑to‑end user flows (register → interact → report → moderate)\n    \n\n1. Authentication (Auth folder)\n    \n\n---\n\nStart by opening the **Auth** folder.\n\nTypical flow:\n\n1. Use **Register** to create a new user account.\n    \n2. Use **Login** to obtain an access token (and optionally a refresh token).\n    \n3. Use **Introspect** to validate tokens when needed.\n    \n4. Use **Forgot password** and **Reset password** to test password recovery flows.\n    \n5. Use **Refresh token** to get a new access token when the old one expires.\n    \n6. Use **Logout** to invalidate the current session/token.\n    \n\nAfter you get a token from **Login**, save it (for example as `{{token}}`) and use it as a Bearer token in the `Authorization` header for protected endpoints:\n\n``` http\nAuthorization: Bearer {{token}}\n\n ```\n\nMost other folders assume you are already authenticated.\n\n1. User management (User folder)\n    \n\n---\n\nThe **User** folder lets you work with user profiles:\n\n- Get user details by ID\n    \n- Update user information\n    \n- Change password for the logged‑in user\n    \n- Delete a user account\n    \n\nUse this folder to verify that registration, profile updates, password changes, and deletion work as expected.\n\nAdmin‑specific user actions are located under the **User/admin** subfolder, where you can:\n\n- List all users\n    \n- View a user by ID\n    \n- Update user information or status (for example, activate/deactivate)\n    \n- Delete users as an administrator\n    \n\n1. Friends (Friend folder)\n    \n\n---\n\nThe **Friend** folder contains requests for friendship features:\n\n- Send friend requests to another user\n    \n- Accept or reject incoming friend requests\n    \n- Cancel sent friend requests (before they are accepted)\n    \n- Unfriend existing friends\n    \n- View your current friends\n    \n- Discover potential friends you are not yet connected with\n    \n\nUse these requests together to simulate the full friend lifecycle:\n\n1. Request friendship\n    \n2. Accept or reject\n    \n3. List friends\n    \n4. Unfriend and confirm the relationship is removed\n    \n5. Groups and group members (Groups, Group members folders)\n    \n\n---\n\n### Groups\n\nThe **Groups** folder handles group‑level operations:\n\n- Create new groups\n    \n- List all groups or only groups you belong to\n    \n- Get group details by ID\n    \n- Update or delete groups\n    \n\nAdmin operations for groups are located under the **Groups/admin** subfolder, where admins can:\n\n- List all groups in the system\n    \n- View details for specific groups\n    \n- Update group status (for example, enable/disable)\n    \n- Delete groups as an administrator\n    \n\n### Group members\n\nThe **Group members** folder focuses on membership:\n\n- View all members of a group\n    \n- Add or remove members (where allowed)\n    \n- Join a group directly or send a join request\n    \n- Cancel a join request\n    \n- Leave a group as a member\n    \n- View and handle join requests and pending statuses\n    \n- Update roles for group members (for example, member → moderator)\n    \n\nAdmin operations for group members are in the **Group members/admin** subfolder, where admins can:\n\n- List all group members\n    \n- Remove members from a group as an administrator\n    \n\n1. Posts, comments, and likes  \n    (Post, Group posts, Comment, Group post like, Group comments of a post)\n    \n\n---\n\nContent‑related features are split across several folders:\n\n### Post\n\nThe **Post** folder focuses on general (non‑group) posts:\n\n- Create general posts\n    \n- View a post by ID\n    \n- Get all posts from friends\n    \n- Get your own posts\n    \n- Get a combined feed of posts\n    \n- Update or delete posts\n    \n- Like posts\n    \n- Share posts\n    \n\n### Group posts\n\nThe **Group posts** folder handles content inside groups:\n\n- Create posts inside a specific group\n    \n- List posts in a group\n    \n- Get a single group post by ID\n    \n- Update or delete a group post\n    \n\nAdmin operations for group posts are in the **Group posts/admin** subfolder, where admins can:\n\n- List all group posts\n    \n- View details of a specific group post\n    \n- Update comment‑related policies on posts\n    \n- Delete posts as an administrator\n    \n\n### Comment\n\nThe **Comment** folder covers comments on general posts:\n\n- Create comments on a post\n    \n- List comments for a given post\n    \n\n### Group comments of a post\n\nThe **Group comments of a post** folder is similar but for group posts:\n\n- Create comments on a specific group post\n    \n- List comments for that group post\n    \n\n### Group post like\n\nThe **Group post like** folder allows you to:\n\n- Like a group post\n    \n\nYou can use variables to store post IDs, group IDs, and comment IDs, then reuse them in related requests. For example:\n\n1. Create a post and capture its `id` into `{{post_id}}`.\n    \n2. Use `{{post_id}}` in comment and like endpoints.\n    \n3. Use the same `{{post_id}}` to test share, update, and delete flows.\n    \n4. Collections of posts (Collections folder)\n    \n\n---\n\nThe **Collections** folder lets you manage saved collections of posts (user‑curated lists):\n\n- Create a new collection\n    \n- List all collections\n    \n- Add a post to a collection\n    \n- Remove a post from a collection\n    \n- Get a specific collection by ID\n    \n- Update a collection’s information\n    \n- Delete a collection\n    \n\nUse this folder to test how users can bookmark or organize content they care about, and verify that add/remove operations work as expected.\n\n1. Notifications (Notification folder)\n    \n\n---\n\nThe **Notification** folder provides access to notifications:\n\n- Retrieve all notifications for the current user\n    \n\nUse this to verify that various actions (friends, groups, posts, reports, etc.) result in the correct notifications.  \nA typical test flow:\n\n1. Trigger an action (e.g., send friend request, comment on a post).\n    \n2. Call the **Get all notifications** request.\n    \n3. Confirm the expected notification appears with accurate data.\n    \n4. File uploads (Files folder)\n    \n\n---\n\nThe **Files** folder demonstrates media handling:\n\n- Upload images\n    \n- Upload videos\n    \n- Check uploaded files (for example, avatar URLs)\n    \n\nUse these requests to confirm:\n\n- The file upload endpoints are working\n    \n- Correct content types are used (e.g., `multipart/form-data`)\n    \n- The API returns valid URLs or paths, which can later be used in user profiles or posts\n    \n\n1. Chat (Chat folder)\n    \n\n---\n\nThe **Chat** folder focuses on messaging:\n\n- Get chat history for a given conversation or partner\n    \n\nYou can adjust parameters (such as chat ID or user ID) to test various conversations and scenarios:\n\n- Existing conversation vs. new conversation\n    \n- Different users as participants\n    \n- Pagination or filters if supported\n    \n\n1. Reports and moderation (Reports folder)\n    \n\n---\n\nThe **Reports** folder covers reporting and moderation features.\n\nUser‑facing actions:\n\n- Create a new report for inappropriate content (posts, users, etc.)\n    \n\nAdmin actions under the **Reports/admin** subfolder:\n\n- List all reports\n    \n- Get a report by ID\n    \n- Resolve reports (e.g., take action and mark as resolved)\n    \n- Reject reports (e.g., no violation found)\n    \n\nCombine these with admin post/user/group operations to test the full moderation flow:\n\n1. A user creates content.\n    \n2. Another user reports that content.\n    \n3. An admin reviews and resolves or rejects the report.\n    \n4. Verify the result via posts/users/groups and reports endpoints.\n    \n5. Admin operations (admin subfolders)\n    \n\n---\n\nSeveral folders have **admin** subfolders for privileged actions. These are intended for administrator accounts and typically require admin‑level permissions:\n\n- **User/admin**\n    \n    - List all users\n        \n    - View specific users\n        \n    - Update user information or status\n        \n    - Delete users\n        \n- **Groups/admin**\n    \n    - List all groups\n        \n    - View or update group details or status\n        \n    - Delete groups\n        \n- **Group members/admin**\n    \n    - List members of a group\n        \n    - Remove members as an admin\n        \n- **Post/admin (under Post)**\n    \n    - List all posts\n        \n    - View a specific post\n        \n    - Update comment policies on posts\n        \n    - Delete posts\n        \n- **Reports/admin (under Reports)**\n    \n    - List all reports\n        \n    - View report details\n        \n    - Resolve or reject reports",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47616387",
+    "_collection_link": "https://go.postman.co/collection/47616387-47dfe12b-97b8-4eb8-a08d-9d67d7c8d20d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "Get all",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Status code is 200\", function () {",
+                      "    pm.response.to.have.status(200);",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiAiLCJmaXJzdE5hbWUiOiJhZG1pbiIsImxhc3ROYW1lIjoiIiwidXNlcl9pZCI6NSwic2NvcGUiOiJBRE1JTiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjY2MjUwOTQsImlhdCI6MTc2NjUzODY5NCwianRpIjoiMWY0NGQ3YzAtMTlhNy00N2JiLTgyMmYtZDNlMjE1NjJlM2FjIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifQ.XRBoJ9fLcA8J6MoWfItvW32ErbbfUKLWooAvWflaNf_Qwq3tsXTt1QEFlbZa9MGsAVWgrbtM6EvhALaB0WHbdg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/users",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "users"
+                  ],
+                  "query": [
+                    {
+                      "key": "role",
+                      "value": "ADMIN",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "gender",
+                      "value": "FEMALE",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "keyword",
+                      "value": "agnea",
+                      "disabled": true
+                    }
+                  ]
+                },
+                "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+              },
+              "response": []
+            },
+            {
+              "name": "Update status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiAiLCJmaXJzdE5hbWUiOiJhZG1pbiIsImxhc3ROYW1lIjoiIiwidXNlcl9pZCI6NSwic2NvcGUiOiJBRE1JTiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjcxNjk0MTksImlhdCI6MTc2NzA4MzAxOSwianRpIjoiNDk4YzY5NjItNzQ4Mi00MjBmLThjOTAtOGUyYWUwNWM1M2IyIiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifQ.uT74SD2Zer9-q6aZ5jWMYLljWT9GhydSthYpCIhfqdO3oMMW6FJaIGsddf5MzcgFndIPl28MKG1VVzQb7CWscA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"status\": \"BANNED\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/users/6/status",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "users",
+                    "6",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by id",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/users/2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "users",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/users/2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "users",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"Successful PUT request\", function () {",
+                      "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+                      "});",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {},
+                    "requests": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NDE4NjAwLCJpYXQiOjE3NjUzMzIyMDAsImp0aSI6IjMyNWY3MWM3LTY1NDMtNGE5Ny05ZDFlLTQ0NDdhMDMyNTgwMSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.AETz8Ya1mXw4Uq8LvGfc7HC4L_wOGbsLT1NTGlrg3bLYKbEWExUGXVF7CY0pPe-Wmn6UtpeBcY9TURlv6g4_ng",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"firstName\": \"a\",\n  \"lastName\": \"a\",\n  \"gender\": \"MALE\",\n  \"password\": \"123456\",\n  \"avatarUrl\": \"https://example.com/images/avatar.jpg\",\n  \"coverUrl\": \"https://example.com/images/cover.jpg\"\n}\n",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/users/2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "users",
+                    "2"
+                  ]
+                },
+                "description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/users/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "users",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Successful PUT request\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204]);",
+                  "});",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NDE4NjAwLCJpYXQiOjE3NjUzMzIyMDAsImp0aSI6IjMyNWY3MWM3LTY1NDMtNGE5Ny05ZDFlLTQ0NDdhMDMyNTgwMSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.AETz8Ya1mXw4Uq8LvGfc7HC4L_wOGbsLT1NTGlrg3bLYKbEWExUGXVF7CY0pPe-Wmn6UtpeBcY9TURlv6g4_ng",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\n//   \"firstName\": \"meo\",\n//   \"lastName\": \"meo\",\n//   \"gender\": \"MALE\",\n//   \"password\": \"123\",\n//   \"avatarUrl\": \"https://example.com/images/avatar.jpg\",\n//   \"coverUrl\": \"https://example.com/images/cover.jpg\"\n// }\n\n{\n    \"avatarUrl\": \"1765334259464-anh-mo-ta.jpg\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/users/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "users",
+                "2"
+              ]
+            },
+            "description": "This is a PUT request and it is used to overwrite an existing piece of data. For instance, after you create an entity with a POST request, you may want to modify that later. You can do that using a PUT request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful PUT request typically returns a `200 OK`, `201 Created`, or `204 No Content` response code."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/users/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "users",
+                "1"
+              ]
+            },
+            "description": "This is a DELETE request, and it is used to delete data that was previously created via a POST request. You typically identify the entity being updated by including an identifier in the URL (eg. `id=1`).\n\nA successful DELETE request typically returns a `200 OK`, `202 Accepted`, or `204 No Content` response code."
+          },
+          "response": []
+        },
+        {
+          "name": "Change password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImFhIiwibGFzdE5hbWUiOiJhYSIsInVzZXJfaWQiOjIsInNjb3BlIjoiTUVNQkVSIiwiaXNzIjoiZnJpZW5kLWh1Yi5jb20iLCJleHAiOjE3NzAxOTM1MTMsImlhdCI6MTc3MDEwNzExMywianRpIjoiNjBhNWNiNWEtNTAxZS00MmMzLTg1NDUtM2Q4MTVmODg1YzkyIn0.czadyNYaciS8YMJq6XKNyRHKefrl0EWE2etYFBRdPx-NBBCqdkX2n3Nx4Cao2xmHRprLzmalRU7kuRfmUmkB_g",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"oldPassword\": \"123123\",\r\n    \"newPassword\": \"456456\",\r\n    \"confirmPassword\": \"456456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/users/me/change-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "users",
+                "me",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Post",
+      "item": [
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "Get all",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJhZG1pbiIsImxhc3ROYW1lIjoiIiwidXNlcl9pZCI6NSwic2NvcGUiOiJBRE1JTiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTgzMzUyLCJpYXQiOjE3Njk0OTY5NTIsImp0aSI6IjAxNGIxMmVjLWZjZWUtNDE2OS05Y2JlLTYzMTA4ZWM1M2MzMCJ9.RLRmkpo-FYMdbhHObDjzYAFJLGoIG51TfVdjuVzgp2Qcpfu7I2rYGSo7DpREAdO3vF9giMYDRHGTO-trp_mHpQ",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/posts",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "posts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by id",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjU3MDQzNTAsImlhdCI6MTc2NTYxNzk1MCwianRpIjoiNWIxZTNlOTUtZjBmYi00ZTMxLTliNTctOWE4MjcyNDNiZDBjIiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0.D9ADGUcPtff8jlTgJCrkiRMMagIl-ejinjteNY0yPYhucD4NGo2ruajPN5Wi6G0v8cuy5LELgRkurOuVvx8a6A",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/posts/10",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "posts",
+                    "10"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update comment status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"policy\": \"DISABLED\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/posts/2/comment-policy",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "posts",
+                    "2",
+                    "comment-policy"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": ""
+                },
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/posts/5",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "posts",
+                    "5"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY4Mzc1NTQ3LCJpYXQiOjE3NjgyODkxNDcsImp0aSI6IjkwYjlmYjgwLWM3MTgtNDI3OS04Y2IxLWI1NTEyNjNmMjc5ZCJ9.P3pgetfuFhscmUA_I7SRin1X6uOKZ7hEtKs9ihGiMxDYT7ZsVwO_sxe6Nlt17iSHl7WejMykO781mTTN-SCJZw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/75",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "75"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all friend's posts",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImFhIiwibGFzdE5hbWUiOiJhYSIsInVzZXJfaWQiOjIsInNjb3BlIjoiTUVNQkVSIiwiaXNzIjoiZnJpZW5kLWh1Yi5jb20iLCJleHAiOjE3NzAxOTM0NzcsImlhdCI6MTc3MDEwNzA3NywianRpIjoiMDQwMzRkOGEtNWExMS00YjM3LWI5NDMtYWFmZjZhNTcwYzIwIn0.iJmwPk3F2wrSUQBCUbaR4tL1yasqbyeIN4ZkphP7wCYdEOyCp1qow_q9nbPDbpD3TrgUcGSFyuEJF2esQPbFFw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/friends",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "friends"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NDE4NjAwLCJpYXQiOjE3NjUzMzIyMDAsImp0aSI6IjMyNWY3MWM3LTY1NDMtNGE5Ny05ZDFlLTQ0NDdhMDMyNTgwMSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.AETz8Ya1mXw4Uq8LvGfc7HC4L_wOGbsLT1NTGlrg3bLYKbEWExUGXVF7CY0pPe-Wmn6UtpeBcY9TURlv6g4_ng",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"meo meo main coone ne hehehehee\",\r\n    \"privacy\": \"PUBLIC\",\r\n    \"mediaUrl\": \"hehheh\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"con meo no keu lam sao\",\r\n    \"mediaUrl\": \"hehhehe\",\r\n    \"author\": 2 \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Share",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImEiLCJsYXN0TmFtZSI6ImEiLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzcwMTEzMTUzLCJpYXQiOjE3NzAwMjY3NTMsImp0aSI6IjhkNGNjYTczLTk1NTEtNDI5ZC1hYTdhLWUwNGQ1ZDA2NDZkYSJ9.uXNmTrRortuMebVD5-I9KxCqIb40GIWXqFujhQ1G6tGo6w59xT_OSXOefKqK33x7mto79fuy3GyAVfLWlPwBww",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"bai viet nay hay ne\",\r\n    \"privacy\": \"PUBLIC\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/2/share",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "2",
+                "share"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my posts",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImFhIiwibGFzdE5hbWUiOiJhYSIsInVzZXJfaWQiOjIsInNjb3BlIjoiTUVNQkVSIiwiaXNzIjoiZnJpZW5kLWh1Yi5jb20iLCJleHAiOjE3NzAxOTM1MTMsImlhdCI6MTc3MDEwNzExMywianRpIjoiNjBhNWNiNWEtNTAxZS00MmMzLTg1NDUtM2Q4MTVmODg1YzkyIn0.czadyNYaciS8YMJq6XKNyRHKefrl0EWE2etYFBRdPx-NBBCqdkX2n3Nx4Cao2xmHRprLzmalRU7kuRfmUmkB_g",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/my",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Feed",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImFhIiwibGFzdE5hbWUiOiJhYSIsInVzZXJfaWQiOjIsInNjb3BlIjoiTUVNQkVSIiwiaXNzIjoiZnJpZW5kLWh1Yi5jb20iLCJleHAiOjE3NzAxOTM1MTMsImlhdCI6MTc3MDEwNzExMywianRpIjoiNjBhNWNiNWEtNTAxZS00MmMzLTg1NDUtM2Q4MTVmODg1YzkyIn0.czadyNYaciS8YMJq6XKNyRHKefrl0EWE2etYFBRdPx-NBBCqdkX2n3Nx4Cao2xmHRprLzmalRU7kuRfmUmkB_g",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/feed",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "feed"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// 2\r\n// {\r\n//     \"email\": \"meomeo.doe@example.com\",\r\n//     \"password\": \"123123\"\r\n// }\r\n\r\n// 3\r\n// {\r\n//     \"email\": \"maincoon.doe@example.com\",\r\n//     \"password\": \"meo123\"\r\n// }\r\n\r\n// 5\r\n// {\r\n//     \"email\": \"admin@gmail.com\",\r\n//     \"password\": \"123456\"\r\n// }\r\n\r\n// 6\r\n{\r\n    \"email\": \"a@gmail.com\",\r\n    \"password\": \"123456\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Introspect",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJmcmllbmRodWIuY29tIiwic3ViIjoiTWFpbiBDb29uIiwiZXhwIjoxNzY0ODE2MzQyLCJpYXQiOjE3NjQ4MTQ1NDIsImp0aSI6IjBjNTcxNzE2LWU5YjktNDQyYS1iNzhhLWNhM2FhMjBiODQ1OCIsInNjb3BlIjoiTUVNQkVSIn0.YxUv7f3tuup1Tmwoh3URJEGyPhMZgC0DmfNm_ITdDKolqizNWJCQ3kqhs258IOy9ZJsFkBRoFMbM4-t-AP6MLw\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/auth/introspect",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "auth",
+                "introspect"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImFhIiwibGFzdE5hbWUiOiJhYSIsInVzZXJfaWQiOjIsInNjb3BlIjoiTUVNQkVSIiwiaXNzIjoiZnJpZW5kLWh1Yi5jb20iLCJleHAiOjE3NzAxOTMyNjAsImlhdCI6MTc3MDEwNjg2MCwianRpIjoiMTA3N2I2MDktZjk3YS00MGFmLWEzMmQtYjI5NWFkMTFlZjNkIn0._ZhBd2qXyTkHxEtpxLMIhLALpDIw8hS6R2pmjH9A2JieqSYR0iSwPU4YPs4QJYjlEAiGsz0AIca3kz9BSubB6g\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/auth/logout",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "auth",
+                "logout"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"agnea\",\r\n    \"lastName\": \"brismist\",\r\n    \"gender\": \"FEMALE\",\r\n    \"email\": \"agnea@gmail.com\",\r\n    \"password\": \"123123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImFhIiwibGFzdE5hbWUiOiJhYSIsInVzZXJfaWQiOjIsInNjb3BlIjoiTUVNQkVSIiwiaXNzIjoiZnJpZW5kLWh1Yi5jb20iLCJleHAiOjE3NzAxOTM0NzcsImlhdCI6MTc3MDEwNzA3NywianRpIjoiMDQwMzRkOGEtNWExMS00YjM3LWI5NDMtYWFmZjZhNTcwYzIwIn0.iJmwPk3F2wrSUQBCUbaR4tL1yasqbyeIN4ZkphP7wCYdEOyCp1qow_q9nbPDbpD3TrgUcGSFyuEJF2esQPbFFw\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/auth/refresh",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"agnea@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/auth/forgot-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "auth",
+                "forgot-password"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"token\": \"54ec557f-6002-416e-838a-e5419dc1a8ac\",\r\n    \"newPassword\": \"123456\",\r\n    \"confirmPassword\": \"123456\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/auth/reset-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "auth",
+                "reset-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Comment",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiBudWxsIiwidXNlcl9pZCI6NSwic2NvcGUiOiJBRE1JTiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjQ4MjMxMTksImlhdCI6MTc2NDgyMTMxOSwianRpIjoiOWY1ZjY3NWMtODg3MS00OGNlLTljZjktM2RhM2QzMTM2NjE0IiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifQ.UFDvqBCb_BoM8BIR-svd57EWa2FoYRuziMoSqLS61YQB4brwHvoHekMnCd-QRPh3wq5EQYBjLHn0nNzGoaevfg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"Wow, this is amazing! I can't wait to see more updates from you!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/1/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "1",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1MjQzNTA5LCJpYXQiOjE3NjUxNTcxMDksImp0aSI6ImQxYzg2ZmU5LWNjMTctNDRhZS05ZDhiLWFiZjZjYWExMzJhNyIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.E0-OYEV6tYlkxkBkyVu7eanFzHN9PnL-8WphSKRx-ITY0aAX6wAzKWcSuoK_OoXTigxe2aV8wi4gfjGdr2RL5Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/1/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "1",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Like",
+      "item": [
+        {
+          "name": "Like",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjYxOTQ3ODcsImlhdCI6MTc2NjEwODM4NywianRpIjoiZDgwYTkyNGItOTU0YS00NWZiLTgzMmItNmM5MGZkMjYwNWEyIiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0.Jj09wnc5X8vU38MXrIYmcWsNUkdWIl0hmryPwrFBxhb7uEtzrBowt3jkPotQdznHk1TlR_zE-EQkPt7EZKhB5w",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/posts/1/like",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "posts",
+                "1",
+                "like"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Friend",
+      "item": [
+        {
+          "name": "Request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImEiLCJsYXN0TmFtZSI6ImEiLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzcwMTEzMTUzLCJpYXQiOjE3NzAwMjY3NTMsImp0aSI6IjhkNGNjYTczLTk1NTEtNDI5ZC1hYTdhLWUwNGQ1ZDA2NDZkYSJ9.uXNmTrRortuMebVD5-I9KxCqIb40GIWXqFujhQ1G6tGo6w59xT_OSXOefKqK33x7mto79fuy3GyAVfLWlPwBww",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/friends/3/requests",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "friends",
+                "3",
+                "requests"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjUxNTkxOTEsImlhdCI6MTc2NTA3Mjc5MSwianRpIjoiZDMxMTM3ZjktNjcwMy00Y2JjLTk0MGYtMjRmNjA5NDQxNzE0IiwiZW1haWwiOiJhQGdtYWlsLmNvbSJ9._1i2AMKAzYtXDBS-kIGLoHRbOzTLzc31ndvOnxYrZ-J5eC0Ulgkjyu3wzXJ1uQjzlKmInepcamQPpV40o2_EYA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/friends/3/accept",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "friends",
+                "3",
+                "accept"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImEiLCJsYXN0TmFtZSI6ImEiLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzcwMTEzMDIzLCJpYXQiOjE3NzAwMjY2MjMsImp0aSI6IjZiNzU4MGY4LWM2MDYtNDJjYS1iYWNlLWVlMTQ1ZmYwZjExOSJ9.0MDjnGgUcicSLeJKubit5SFXDPM5muyUv1xfNk8ds3Xerkn-Dl9skFJrdo9Kzjjohgkww9wlo9uvuha9NbQRDg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"userId\": \"3\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/friends/3/reject",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "friends",
+                "3",
+                "reject"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Unfriend",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImEiLCJsYXN0TmFtZSI6ImEiLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzcwMTEzMTUzLCJpYXQiOjE3NzAwMjY3NTMsImp0aSI6IjhkNGNjYTczLTk1NTEtNDI5ZC1hYTdhLWUwNGQ1ZDA2NDZkYSJ9.uXNmTrRortuMebVD5-I9KxCqIb40GIWXqFujhQ1G6tGo6w59xT_OSXOefKqK33x7mto79fuy3GyAVfLWlPwBww",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/friends/3/unfriend",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "friends",
+                "3",
+                "unfriend"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "All friends",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjU4NzgzNjEsImlhdCI6MTc2NTc5MTk2MSwianRpIjoiYTAyZDI2OTQtN2IwYS00NzZjLTgwZTItZjViZWE4MDE0Yzk2IiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0.URoygLevFNGVFOHFqcSGPM8oinhjr_DbP4sWm0HitlRxf2ZYBrkwc6E1cCi6Mp4UyZazXOzCenNXvWnXc61MTg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/friends",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "friends"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all potential friends",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjU4NzgzNjEsImlhdCI6MTc2NTc5MTk2MSwianRpIjoiYTAyZDI2OTQtN2IwYS00NzZjLTgwZTItZjViZWE4MDE0Yzk2IiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0.URoygLevFNGVFOHFqcSGPM8oinhjr_DbP4sWm0HitlRxf2ZYBrkwc6E1cCi6Mp4UyZazXOzCenNXvWnXc61MTg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/friends/potential",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "friends",
+                "potential"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Files",
+      "item": [
+        {
+          "name": "images",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1MjQzNTA5LCJpYXQiOjE3NjUxNTcxMDksImp0aSI6ImQxYzg2ZmU5LWNjMTctNDRhZS05ZDhiLWFiZjZjYWExMzJhNyIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.E0-OYEV6tYlkxkBkyVu7eanFzHN9PnL-8WphSKRx-ITY0aAX6wAzKWcSuoK_OoXTigxe2aV8wi4gfjGdr2RL5Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "uuid": "5f2275f9-6665-40b0-8fc8-82cb7eb19b66",
+                  "src": "/C:/Users/Lenovo/Downloads/tải xuống.jpg"
+                },
+                {
+                  "key": "files",
+                  "type": "file",
+                  "uuid": "cafabd18-78ab-40b6-8a93-18fd5812dca0",
+                  "src": "/C:/Users/Lenovo/Downloads/be3b6afa82037b4fbd957df3cd1fbc71.jpg"
+                },
+                {
+                  "key": "folder",
+                  "value": "avatar",
+                  "type": "text",
+                  "uuid": "e5b8e1cf-5aa0-4d12-a526-e9295d94f31f"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/files/upload",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "files",
+                "upload"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "video",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NDE4NjAwLCJpYXQiOjE3NjUzMzIyMDAsImp0aSI6IjMyNWY3MWM3LTY1NDMtNGE5Ny05ZDFlLTQ0NDdhMDMyNTgwMSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.AETz8Ya1mXw4Uq8LvGfc7HC4L_wOGbsLT1NTGlrg3bLYKbEWExUGXVF7CY0pPe-Wmn6UtpeBcY9TURlv6g4_ng",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "files",
+                  "type": "file",
+                  "uuid": "e5b8e1cf-5aa0-4d12-a526-e9295d94f31f",
+                  "src": "/C:/Users/Lenovo/Downloads/videoplayback.mp4"
+                },
+                {
+                  "key": "folder",
+                  "value": "posts",
+                  "type": "text",
+                  "uuid": "77b3c454-b863-4550-9c35-84252ac55cfb"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/files/upload",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "files",
+                "upload"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Check",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1MjQzNTA5LCJpYXQiOjE3NjUxNTcxMDksImp0aSI6ImQxYzg2ZmU5LWNjMTctNDRhZS05ZDhiLWFiZjZjYWExMzJhNyIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.E0-OYEV6tYlkxkBkyVu7eanFzHN9PnL-8WphSKRx-ITY0aAX6wAzKWcSuoK_OoXTigxe2aV8wi4gfjGdr2RL5Q",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/uploads/avatar/1765162539832-a.jpg",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "uploads",
+                "avatar",
+                "1765162539832-a.jpg"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Groups",
+      "item": [
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "update status",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJhZG1pbiIsImxhc3ROYW1lIjoiIiwidXNlcl9pZCI6NSwic2NvcGUiOiJBRE1JTiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTcxMjYwLCJpYXQiOjE3Njk0ODQ4NjAsImp0aSI6IjdmNWQzMjg2LThkOTctNGQ1OS04NDI5LWFiZmJkYThlYWZhMiJ9.OSsfv8ECiA40OUXLhNgakBeomnhdRj4dboTkPkHxFfruy1rmTfdRblXFFXcnV3_vSLy7vjQONp9yICn8z5w0dQ",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PATCH",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"status\": \"ACTIVE\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups/9/status",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups",
+                    "9",
+                    "status"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get all",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NjgwODE3LCJpYXQiOjE3NjU1OTQ0MTcsImp0aSI6IjkwZjljOTc5LTA1N2UtNGFiNC1hNjdiLTMyN2RlNTc2NGI0YyIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.JVuCNn6MP9mO2r4Ibdw8In7xTlqm6VZTfXzYKhjmFl3iODgiP7osZwq6TUH1zZPHRkys5KcSoGa1I-dnymnQgg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by id",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjU4NTE2NTcsImlhdCI6MTc2NTc2NTI1NywianRpIjoiMTY5ZWQxOTMtMmZhNC00NWI0LWJkNmEtOTVjOTdlNTIwMjc0IiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0.tQGUDobgpE7COwcVlZMpWXgwSt2fPj8hxREBKi-IVvDXFz2DMeKF2spplOfJmu2XU8UPQ4EqmbcZ94Ri9s5yEw",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups/5",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups",
+                    "5"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups/2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NjgwODE3LCJpYXQiOjE3NjU1OTQ0MTcsImp0aSI6IjkwZjljOTc5LTA1N2UtNGFiNC1hNjdiLTMyN2RlNTc2NGI0YyIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.JVuCNn6MP9mO2r4Ibdw8In7xTlqm6VZTfXzYKhjmFl3iODgiP7osZwq6TUH1zZPHRkys5KcSoGa1I-dnymnQgg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"A\",\r\n  \"privacy\": \"PUBLIC\",\r\n  \"description\": \"A group for people who love to travel and explore new places.\",\r\n  \"coverUrl\": \"https://example.com/covers/travel-group.jpg\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NjgwODE3LCJpYXQiOjE3NjU1OTQ0MTcsImp0aSI6IjkwZjljOTc5LTA1N2UtNGFiNC1hNjdiLTMyN2RlNTc2NGI0YyIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.JVuCNn6MP9mO2r4Ibdw8In7xTlqm6VZTfXzYKhjmFl3iODgiP7osZwq6TUH1zZPHRkys5KcSoGa1I-dnymnQgg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjU4NTE2NTcsImlhdCI6MTc2NTc2NTI1NywianRpIjoiMTY5ZWQxOTMtMmZhNC00NWI0LWJkNmEtOTVjOTdlNTIwMjc0IiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0.tQGUDobgpE7COwcVlZMpWXgwSt2fPj8hxREBKi-IVvDXFz2DMeKF2spplOfJmu2XU8UPQ4EqmbcZ94Ri9s5yEw",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my group",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImFhIiwibGFzdE5hbWUiOiJhYSIsInVzZXJfaWQiOjIsInNjb3BlIjoiTUVNQkVSIiwiaXNzIjoiZnJpZW5kLWh1Yi5jb20iLCJleHAiOjE3NzAxOTg4NDksImlhdCI6MTc3MDExMjQ0OSwianRpIjoiY2U2YjUwYmYtM2QzYy00ZmU1LWExOWMtNzIyNzIwMGVmMDVlIn0.gqMneLgn7YjJ4D7uuJxFAi1tt4n5ahFaKn5gJHFS0xWfF45u1PC7WXXkxsOpFSlk5YHPBoLBRChw-fmostyDog",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/my",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "my"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"a\",\r\n    \"privacy\": \"PUBLIC\",\r\n    \"description\": \"a\",\r\n    \"coverUrl\": \"https://example.com/covers/travel-group.jpg\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImFhIiwibGFzdE5hbWUiOiJhYSIsInVzZXJfaWQiOjIsInNjb3BlIjoiTUVNQkVSIiwiaXNzIjoiZnJpZW5kLWh1Yi5jb20iLCJleHAiOjE3NzAxOTg4NDksImlhdCI6MTc3MDExMjQ0OSwianRpIjoiY2U2YjUwYmYtM2QzYy00ZmU1LWExOWMtNzIyNzIwMGVmMDVlIn0.gqMneLgn7YjJ4D7uuJxFAi1tt4n5ahFaKn5gJHFS0xWfF45u1PC7WXXkxsOpFSlk5YHPBoLBRChw-fmostyDog",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Group members",
+      "item": [
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "Get all",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjU2MTU0NzMsImlhdCI6MTc2NTUyOTA3MywianRpIjoiN2UxMDE5OTAtODAwMS00ODczLTgxNDgtMGMxOGY5ZjBkYjYzIiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0._HYSUcH_lOfh1ETBi1gNFPSg5MwZ5lOa8Y-FRmwtWa5C-8J-6EOa4Jj2VXK_eigtWKrFcM5MZaSZlrVaMToyIg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups/2/members",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups",
+                    "2",
+                    "members"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups/2/members/2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups",
+                    "2",
+                    "members",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3NjU2MTU0NzMsImlhdCI6MTc2NTUyOTA3MywianRpIjoiN2UxMDE5OTAtODAwMS00ODczLTgxNDgtMGMxOGY5ZjBkYjYzIiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0._HYSUcH_lOfh1ETBi1gNFPSg5MwZ5lOa8Y-FRmwtWa5C-8J-6EOa4Jj2VXK_eigtWKrFcM5MZaSZlrVaMToyIg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/2/members",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "2",
+                "members"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Revoming a member",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZ3V5ZW4gYWEiLCJmaXJzdE5hbWUiOiJuZ3V5ZW4iLCJsYXN0TmFtZSI6ImFhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY4MTI1OTExLCJpYXQiOjE3NjgwMzk1MTEsImp0aSI6ImFkZTM0YzhmLTJlNGYtNDY0NS04OTlkLTg5ODEyZWFiNjMzMSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.yNrKLNIZIqKuVRxSRTCoSHk-jzWTjYzWg0wizVZVY69l-UsfH-12nGKaCRuKEQnvKB_xkmSVkyvsDLDzdonEgg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/8/members/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "8",
+                "members",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update role",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NTI3Nzc4LCJpYXQiOjE3NjU0NDEzNzgsImp0aSI6ImNiOTI0YzI5LTc5YTItNDEyZC1hODUxLTZiNjQ4MjVkOGQxMiIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.G9XsxwaePGFZ2EVMTS7ax-NA7b893H2Vr_KonU1xAUL5jJ71v-9y5KT_Qi03cZtH8HIilfLBLpE7J1s0KjiKww",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"role\": \"MODERATOR\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/2/members/5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "2",
+                "members",
+                "5"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Join group",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJNYWluIENvb24iLCJmaXJzdE5hbWUiOiJNYWluIiwibGFzdE5hbWUiOiJDb29uIiwidXNlcl9pZCI6Mywic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1ODc2MTA2LCJpYXQiOjE3NjU3ODk3MDYsImp0aSI6IjFlYzk1YWFiLWJhNjItNDMwYS1iMGZjLTgwMjE2NTRjMTBiNyIsImVtYWlsIjoibWFpbmNvb24uZG9lQGV4YW1wbGUuY29tIn0.4V48cmnNVdKS9FGP_kJhP4ld9YX-VfHIgWfZ5RmRdtZM5mz5dugYa3X2kP7K2kwEGpOwEWI2_mfwY55rqHBJAg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/8/join",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "8",
+                "join"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Leave group",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJNYWluIENvb24iLCJmaXJzdE5hbWUiOiJNYWluIiwibGFzdE5hbWUiOiJDb29uIiwidXNlcl9pZCI6Mywic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1ODc2MTA2LCJpYXQiOjE3NjU3ODk3MDYsImp0aSI6IjFlYzk1YWFiLWJhNjItNDMwYS1iMGZjLTgwMjE2NTRjMTBiNyIsImVtYWlsIjoibWFpbmNvb24uZG9lQGV4YW1wbGUuY29tIn0.4V48cmnNVdKS9FGP_kJhP4ld9YX-VfHIgWfZ5RmRdtZM5mz5dugYa3X2kP7K2kwEGpOwEWI2_mfwY55rqHBJAg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/8/members/me",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "8",
+                "members",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request to join group",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJNYWluIENvb24iLCJmaXJzdE5hbWUiOiJNYWluIiwibGFzdE5hbWUiOiJDb29uIiwidXNlcl9pZCI6Mywic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1ODc2MTA2LCJpYXQiOjE3NjU3ODk3MDYsImp0aSI6IjFlYzk1YWFiLWJhNjItNDMwYS1iMGZjLTgwMjE2NTRjMTBiNyIsImVtYWlsIjoibWFpbmNvb24uZG9lQGV4YW1wbGUuY29tIn0.4V48cmnNVdKS9FGP_kJhP4ld9YX-VfHIgWfZ5RmRdtZM5mz5dugYa3X2kP7K2kwEGpOwEWI2_mfwY55rqHBJAg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/8/request",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "8",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel to join group",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6ImFhIiwibGFzdE5hbWUiOiJhYSIsInVzZXJfaWQiOjIsInNjb3BlIjoiTUVNQkVSIiwiaXNzIjoiZnJpZW5kLWh1Yi5jb20iLCJleHAiOjE3NzAxOTM1MTMsImlhdCI6MTc3MDEwNzExMywianRpIjoiNjBhNWNiNWEtNTAxZS00MmMzLTg1NDUtM2Q4MTVmODg1YzkyIn0.czadyNYaciS8YMJq6XKNyRHKefrl0EWE2etYFBRdPx-NBBCqdkX2n3Nx4Cao2xmHRprLzmalRU7kuRfmUmkB_g",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/8/request",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "8",
+                "request"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all pending status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1ODQ5OTM0LCJpYXQiOjE3NjU3NjM1MzQsImp0aSI6ImY1Njc3MWFmLWU3NWEtNGMyNi04ODRkLWMyNGQyNjU1ODc4NCIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.EERRsIfPLfzR0t-Fu0zhn4N4HPamLc_vc-Dzq27zGd_BxOCpekzVBu1VggUSVE7AlECUvE25p5t5zcI95gw6qg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/2/pending",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "2",
+                "pending"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Handle join request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1ODQ5OTM0LCJpYXQiOjE3NjU3NjM1MzQsImp0aSI6ImY1Njc3MWFmLWU3NWEtNGMyNi04ODRkLWMyNGQyNjU1ODc4NCIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.EERRsIfPLfzR0t-Fu0zhn4N4HPamLc_vc-Dzq27zGd_BxOCpekzVBu1VggUSVE7AlECUvE25p5t5zcI95gw6qg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"approved\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1/handle",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1",
+                "handle"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Group posts",
+      "item": [
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "Get all",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NzY2Mjg0LCJpYXQiOjE3NjU2Nzk4ODQsImp0aSI6ImMyOWM2ZDY4LTQxMzYtNDM2Yy1iOWJmLThmOTkzMTAzNGUyMSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.FnXG0cAEgWk1SORQk54_k1PF4TtLOP-VllAsCYFe-SBejbO9bbhv-_zaNwOblfaykst1FyF1xUPJj-qV2QG9_g",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups/1/posts",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups",
+                    "1",
+                    "posts"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get by id",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NzY5MTYyLCJpYXQiOjE3NjU2ODI3NjIsImp0aSI6IjQ4ZDQyNTc4LWQ2NzctNDc1ZC04MTYxLTYyODNiNzhjMWNjYSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.iUoJsIn0TI6GtnpynHa8fXI46B0G5j30nQgyslxyw1pz5bSWxsCeJ9PMse6Pt2S18lFnioMMSn6zTJDLJUXatg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups/1/posts/2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups",
+                    "1",
+                    "posts",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"content\": \"a\",\r\n    \"privacy\": \"PUBLIC\"\r\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups/1/posts/2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups",
+                    "1",
+                    "posts",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/groups/1/posts/2",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "groups",
+                    "1",
+                    "posts",
+                    "2"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NjE1OTA5LCJpYXQiOjE3NjU1Mjk1MDksImp0aSI6IjUxOWFlNmFhLTIxMjUtNDgwYS1hYTBlLTNjYTkxMzVlYmEzMyIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.dCVu_XJgjZlGgtEielcHZ3fL3vKuDKYPoe94hv6uZ_khADU0Lh67U0eH0IDJtv-lotAzSSYqlV4mcjqbOVGZIA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"Su that no nao ve con meo\",\r\n    \"privacy\": \"PUBLIC\",\r\n    \"mediaUrl\": \"meomeo\",\r\n    \"mediaList\": [],\r\n    \"userId\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1/posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1",
+                "posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NzY2Mjg0LCJpYXQiOjE3NjU2Nzk4ODQsImp0aSI6ImMyOWM2ZDY4LTQxMzYtNDM2Yy1iOWJmLThmOTkzMTAzNGUyMSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.FnXG0cAEgWk1SORQk54_k1PF4TtLOP-VllAsCYFe-SBejbO9bbhv-_zaNwOblfaykst1FyF1xUPJj-qV2QG9_g",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1/posts",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1",
+                "posts"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NzY5MTYyLCJpYXQiOjE3NjU2ODI3NjIsImp0aSI6IjQ4ZDQyNTc4LWQ2NzctNDc1ZC04MTYxLTYyODNiNzhjMWNjYSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.iUoJsIn0TI6GtnpynHa8fXI46B0G5j30nQgyslxyw1pz5bSWxsCeJ9PMse6Pt2S18lFnioMMSn6zTJDLJUXatg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1/posts/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1",
+                "posts",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"a\",\r\n    \"privacy\": \"PUBLIC\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1/posts/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1",
+                "posts",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1/posts/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1",
+                "posts",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Group post like",
+      "item": [
+        {
+          "name": "Like",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NjE1OTA5LCJpYXQiOjE3NjU1Mjk1MDksImp0aSI6IjUxOWFlNmFhLTIxMjUtNDgwYS1hYTBlLTNjYTkxMzVlYmEzMyIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.dCVu_XJgjZlGgtEielcHZ3fL3vKuDKYPoe94hv6uZ_khADU0Lh67U0eH0IDJtv-lotAzSSYqlV4mcjqbOVGZIA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1/posts/48/likes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1",
+                "posts",
+                "48",
+                "likes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Group comments of a post",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NjE1OTA5LCJpYXQiOjE3NjU1Mjk1MDksImp0aSI6IjUxOWFlNmFhLTIxMjUtNDgwYS1hYTBlLTNjYTkxMzVlYmEzMyIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.dCVu_XJgjZlGgtEielcHZ3fL3vKuDKYPoe94hv6uZ_khADU0Lh67U0eH0IDJtv-lotAzSSYqlV4mcjqbOVGZIA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"content\": \"con meo kia\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1/posts/48/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1",
+                "posts",
+                "48",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhIGEiLCJmaXJzdE5hbWUiOiJhIiwibGFzdE5hbWUiOiJhIiwidXNlcl9pZCI6Niwic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY1NzY5MTYyLCJpYXQiOjE3NjU2ODI3NjIsImp0aSI6IjQ4ZDQyNTc4LWQ2NzctNDc1ZC04MTYxLTYyODNiNzhjMWNjYSIsImVtYWlsIjoiYUBnbWFpbC5jb20ifQ.iUoJsIn0TI6GtnpynHa8fXI46B0G5j30nQgyslxyw1pz5bSWxsCeJ9PMse6Pt2S18lFnioMMSn6zTJDLJUXatg",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/groups/1/posts/48/comments",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "groups",
+                "1",
+                "posts",
+                "48",
+                "comments"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notification",
+      "item": [
+        {
+          "name": "Get all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJNYWluIENvb24iLCJmaXJzdE5hbWUiOiJNYWluIiwibGFzdE5hbWUiOiJDb29uIiwidXNlcl9pZCI6Mywic2NvcGUiOiJNRU1CRVIiLCJpc3MiOiJmcmllbmRodWIuY29tIiwiZXhwIjoxNzY2MjE0ODg5LCJpYXQiOjE3NjYxMjg0ODksImp0aSI6ImNmNTdhN2YzLWRmOWItNDRkZi04Zjc3LTRmNWM1YTRmOTk0YiIsImVtYWlsIjoibWFpbmNvb24uZG9lQGV4YW1wbGUuY29tIn0.m7foCHKVKb1Cx1mH_HqKO3WnDOVtXf1SGcZqLRTYEH9ZfPBS8reIHHeCP3JCwSITq8CeY7xfv3GUgPyUGqkdkA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/notifications",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "notifications"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "admin",
+          "item": [
+            {
+              "name": "Get by id",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3Njc0MTQwODEsImlhdCI6MTc2NzMyNzY4MSwianRpIjoiMThmYTZhNmYtYzUzZi00NzM3LTkxNDgtY2I1NTEzZGMxMTM1IiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0.Pwp9aXMshm_mrFZpwR-wgVgoHZKK7laNBYkiXMLSabAK2xRCQ7sR-7bpWjXvvEhYXYhpHbRwXkd1fG318iEUFA",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\r\n    \"targetType\": \"POST\",\r\n    \"reportReason\": \"SPAM\",\r\n    \"targetId\": \"65\"\r\n}"
+                },
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/reports/1",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "reports",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get all",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJmaXJzdE5hbWUiOiJhZG1pbiIsImxhc3ROYW1lIjoiIiwidXNlcl9pZCI6NSwic2NvcGUiOiJBRE1JTiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5MTU1OTYwLCJpYXQiOjE3NjkwNjk1NjAsImp0aSI6IjNjMzE5ZmY5LThlM2YtNDkzZi1hMWYzLTM0NjY5ZTFiYzYxMSJ9.lofnE_tDevb73UXWBpppEw7AfR9oAOc8X71xvEom9cb7RuVAEOOkNFtR14nsXIgQS-wDf5jYFNE7aYjV7oTu9A",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/reports",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "reports"
+                  ],
+                  "query": [
+                    {
+                      "key": "keyword",
+                      "value": "SPAM",
+                      "type": "text",
+                      "disabled": true
+                    },
+                    {
+                      "key": "targetType",
+                      "value": "POST",
+                      "disabled": true
+                    },
+                    {
+                      "key": "status",
+                      "value": "RESOLVED",
+                      "type": "text",
+                      "disabled": true
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Resolve",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiAiLCJmaXJzdE5hbWUiOiJhZG1pbiIsImxhc3ROYW1lIjoiIiwidXNlcl9pZCI6NSwic2NvcGUiOiJBRE1JTiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3Njc0MjEwNzAsImlhdCI6MTc2NzMzNDY3MCwianRpIjoiMDU4ZTAwMzAtNDk3MC00YWQ5LWI2ZDgtNzQ4MzY2ZmZiMWQ5IiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifQ.hakiTNS3ZIce6QSEN1SMhF9qRaFvPC7pDJQWeW3-uyePAzXnGHUQf_sWFYSSokj_EG8AoHUi-2CxtTFSrFyOpg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/reports/1/resolve",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "reports",
+                    "1",
+                    "resolve"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Reject",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiAiLCJmaXJzdE5hbWUiOiJhZG1pbiIsImxhc3ROYW1lIjoiIiwidXNlcl9pZCI6NSwic2NvcGUiOiJBRE1JTiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3Njc0MjEwNzAsImlhdCI6MTc2NzMzNDY3MCwianRpIjoiMDU4ZTAwMzAtNDk3MC00YWQ5LWI2ZDgtNzQ4MzY2ZmZiMWQ5IiwiZW1haWwiOiJhZG1pbkBnbWFpbC5jb20ifQ.hakiTNS3ZIce6QSEN1SMhF9qRaFvPC7pDJQWeW3-uyePAzXnGHUQf_sWFYSSokj_EG8AoHUi-2CxtTFSrFyOpg",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "http://localhost:8080/friend-hub/admin/reports/2/reject",
+                  "protocol": "http",
+                  "host": [
+                    "localhost"
+                  ],
+                  "port": "8080",
+                  "path": [
+                    "friend-hub",
+                    "admin",
+                    "reports",
+                    "2",
+                    "reject"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Create report",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtZW8gbWVvIiwiZmlyc3ROYW1lIjoibWVvIiwibGFzdE5hbWUiOiJtZW8iLCJ1c2VyX2lkIjoyLCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZGh1Yi5jb20iLCJleHAiOjE3Njc0MTQwODEsImlhdCI6MTc2NzMyNzY4MSwianRpIjoiMThmYTZhNmYtYzUzZi00NzM3LTkxNDgtY2I1NTEzZGMxMTM1IiwiZW1haWwiOiJtZW9tZW8uZG9lQGV4YW1wbGUuY29tIn0.Pwp9aXMshm_mrFZpwR-wgVgoHZKK7laNBYkiXMLSabAK2xRCQ7sR-7bpWjXvvEhYXYhpHbRwXkd1fG318iEUFA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"targetType\": \"POST\",\r\n    \"reportReason\": \"HATE\",\r\n    \"targetId\": \"64\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/reports",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "reports"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Collections",
+      "item": [
+        {
+          "name": "Create",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NDk3NjA5LCJpYXQiOjE3Njk0MTEyMDksImp0aSI6IjNiY2M2OTFmLTk3MTAtNDYxNS04MmRiLWI5YTA2ZGM4YjczNiJ9.7DiMjaS57YmyNTkvTyzpXS6rQHs2wu97dDyYslVUfwsmkEHpaUwbQPoRuAZpOOwvwoWStsiKII6cKFKJqGPZNQ",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"my favorie post\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/collections",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "collections"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get all",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NDk3NjA5LCJpYXQiOjE3Njk0MTEyMDksImp0aSI6IjNiY2M2OTFmLTk3MTAtNDYxNS04MmRiLWI5YTA2ZGM4YjczNiJ9.7DiMjaS57YmyNTkvTyzpXS6rQHs2wu97dDyYslVUfwsmkEHpaUwbQPoRuAZpOOwvwoWStsiKII6cKFKJqGPZNQ",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/collections",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "collections"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Add post to collection",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NDk3NjA5LCJpYXQiOjE3Njk0MTEyMDksImp0aSI6IjNiY2M2OTFmLTk3MTAtNDYxNS04MmRiLWI5YTA2ZGM4YjczNiJ9.7DiMjaS57YmyNTkvTyzpXS6rQHs2wu97dDyYslVUfwsmkEHpaUwbQPoRuAZpOOwvwoWStsiKII6cKFKJqGPZNQ",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/collections/1/posts/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "collections",
+                "1",
+                "posts",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Removing post from collection",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/collections/1/posts/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "collections",
+                "1",
+                "posts",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/collections/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "collections",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"a\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/collections/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "collections",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/collections/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "collections",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Chat",
+      "item": [
+        {
+          "name": "Get chat history",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6Im5ndXllbiIsImxhc3ROYW1lIjoiYWEiLCJ1c2VyX2lkIjo2LCJzY29wZSI6Ik1FTUJFUiIsImlzcyI6ImZyaWVuZC1odWIuY29tIiwiZXhwIjoxNzY5NTg4MDEyLCJpYXQiOjE3Njk1MDE2MTIsImp0aSI6ImVhMWU3YWZiLWViZTAtNDQ2NC1iMjBhLTE1NGYwMTU3MjQ3ZCJ9.CAOoRYIuXOFZZzjRjjRYkJWdrX7nOCMq_5l2L6nBm0NkGASihStM8_yUGmoONdDWETxmZbjlcTXw9G1YkplEKA",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/friend-hub/chats/6?X-User-Id=2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "friend-hub",
+                "chats",
+                "6"
+              ],
+              "query": [
+                {
+                  "key": "X-User-Id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "id",
+      "value": "1"
+    },
+    {
+      "key": "base_url",
+      "value": "https://template.postman-echo.com"
+    }
+  ]
+}

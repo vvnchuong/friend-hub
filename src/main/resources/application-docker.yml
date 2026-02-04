@@ -40,8 +40,8 @@ app:
 
 jwt:
   signerKey: "qefqi5X+n/6jIHV74cPC6QTZvKBmyddMNhw7vWO3Yu7Rk1YdN2EWNjs7zJX/ZL0i"
-  validDuration: 86400
+  validDuration: 3600
   refreshableDuration: 86400
 
 upload-file:
-  base-uri: C:\Users\Lenovo\OneDrive - VNU-HCMUS\Desktop\project\uploads
+  base-uri: YOUR_FOLDER_PATH
